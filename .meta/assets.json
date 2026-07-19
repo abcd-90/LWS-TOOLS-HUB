@@ -1,0 +1,286 @@
+[
+  {
+    "url": "https://technotools.lovable.app/",
+    "type": "html",
+    "localPath": "index.html",
+    "status": "downloaded"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/techno-tools-logo-DMxFsREq.jpg",
+    "type": "image",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/techno-tools-logo-DMxFsREq.jpg"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/styles-ChxsXWwC.css",
+    "type": "css",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/styles-ChxsXWwC.css"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap",
+    "type": "other",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "css2_family_Fredoka_wght@400;500;600;700_family_Inter_wght@400;500;600;700_display_swap"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/index-Dr8K-Qyh.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/index-Dr8K-Qyh.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/button-GRMyZlvL.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/button-GRMyZlvL.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/link-CZ3VaoX1.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/link-CZ3VaoX1.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/useRouter-5qkB_ysC.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/useRouter-5qkB_ysC.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/routes-DTKMzjaE.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/routes-DTKMzjaE.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/scroll-area-BWrPC3DO.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/scroll-area-BWrPC3DO.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/badge-B7Q8D7vI.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/badge-B7Q8D7vI.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/arrow-right-CxBimmIe.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/arrow-right-CxBimmIe.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/send-CyAu5G_r.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/send-CyAu5G_r.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/ToolCard-DgqKN_KS.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/ToolCard-DgqKN_KS.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/card-D2GXYJS0.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/card-D2GXYJS0.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/input-BuMoPX4F.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "assets/input-BuMoPX4F.js"
+  },
+  {
+    "url": "https://fonts.googleapis.com/",
+    "type": "other",
+    "status": "failed",
+    "fromPage": "https://technotools.lovable.app/",
+    "error": "HTTP 404"
+  },
+  {
+    "url": "https://fonts.gstatic.com/",
+    "type": "other",
+    "status": "failed",
+    "fromPage": "https://technotools.lovable.app/",
+    "error": "HTTP 404"
+  },
+  {
+    "url": "https://technotools.lovable.app/~flock.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "~flock.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/__l5e/events.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "__l5e/events.js"
+  },
+  {
+    "url": "https://cdn.gpteng.co/mcp-widgets/v1/fonts/CameraPlainVariable.woff2",
+    "type": "font",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/",
+    "localPath": "mcp-widgets/v1/fonts/CameraPlainVariable.woff2"
+  },
+  {
+    "url": "https://technotools.lovable.app/tools",
+    "type": "html",
+    "localPath": "tools/index.html",
+    "status": "downloaded"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/tools-CbH_7lcJ.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/tools",
+    "localPath": "assets/tools-CbH_7lcJ.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/contact",
+    "type": "html",
+    "localPath": "contact/index.html",
+    "status": "downloaded"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/contact-BCVLAgyQ.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/contact",
+    "localPath": "assets/contact-BCVLAgyQ.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/label-D4V9ugJC.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/contact",
+    "localPath": "assets/label-D4V9ugJC.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/textarea-DresIQw_.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/contact",
+    "localPath": "assets/textarea-DresIQw_.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/tools?trending=%22true%22",
+    "type": "html",
+    "localPath": "tools/index.html_trending_%22true%22",
+    "status": "downloaded"
+  },
+  {
+    "url": "https://technotools.lovable.app/cart",
+    "type": "html",
+    "localPath": "cart/index.html",
+    "status": "downloaded"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/cart-CUpgfeLx.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/cart",
+    "localPath": "assets/cart-CUpgfeLx.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/arrow-left-DCoaF0W7.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/cart",
+    "localPath": "assets/arrow-left-DCoaF0W7.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/lock-A8CcWOa6.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/cart",
+    "localPath": "assets/lock-A8CcWOa6.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/trash-2-D5nKGCM1.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/cart",
+    "localPath": "assets/trash-2-D5nKGCM1.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/auth",
+    "type": "html",
+    "localPath": "auth/index.html",
+    "status": "downloaded"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/auth-kRpvbMVT.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/auth",
+    "localPath": "assets/auth-kRpvbMVT.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/dist-DmMK4EGC.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/auth",
+    "localPath": "assets/dist-DmMK4EGC.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/dist-tduyU_kO.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/auth",
+    "localPath": "assets/dist-tduyU_kO.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/assets/dist-C21LYJDS.js",
+    "type": "js",
+    "status": "downloaded",
+    "fromPage": "https://technotools.lovable.app/auth",
+    "localPath": "assets/dist-C21LYJDS.js"
+  },
+  {
+    "url": "https://technotools.lovable.app/tools?category=AI",
+    "type": "html",
+    "localPath": "tools/index.html_category_AI",
+    "status": "downloaded"
+  },
+  {
+    "url": "https://technotools.lovable.app/tools?category=Design",
+    "type": "html",
+    "localPath": "tools/index.html_category_Design",
+    "status": "downloaded"
+  },
+  {
+    "url": "https://technotools.lovable.app/tools?category=Streaming",
+    "type": "html",
+    "localPath": "tools/index.html_category_Streaming",
+    "status": "downloaded"
+  },
+  {
+    "url": "https://technotools.lovable.app/tools?category=SEO",
+    "type": "html",
+    "localPath": "tools/index.html_category_SEO",
+    "status": "downloaded"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/tools/:path*", "destination": "/tools/index.html" },
+    { "source": "/contact/:path*", "destination": "/contact/index.html" },
+    { "source": "/cart/:path*", "destination": "/cart/index.html" },
+    { "source": "/auth/:path*", "destination": "/auth/index.html" },
+    { "source": "/lws-control-726/:path*", "destination": "/lws-control-726/index.html" },
+    { "source": "/((?!assets|css2|~flock|__l5e).*)", "destination": "/index.html" }
+  ]
+}

@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LWS Control - Premium Admin Panel</title>
+  <!-- Google Fonts Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              red: '#f43f5e', // rose-500
+              hover: '#e11d48', // rose-600
+              dark: '#be123c', // rose-700
+              bg: '#09090b', // zinc-950
+              card: 'rgba(24, 24, 27, 0.7)', // zinc-900 with opacity
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .glass {
+      background: rgba(20, 20, 23, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(63, 63, 70, 0.4);
+    }
+    .glow-red {
+      box-shadow: 0 0 25px -5px rgba(244, 63, 94, 0.2), 0 0 10px -3px rgba(244, 63, 94, 0.1);
+    }
+    .glow-red-btn:hover {
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #09090b;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+    /* Hide scrollbar but keep functionality */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-zinc-100 flex flex-col">
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- ================= LOCK SCREEN OVERLAY ================= -->
+  <div id="lock-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 transition-all duration-500">
+    <div class="glass p-8 rounded-2xl w-full max-w-md glow-red flex flex-col items-center">
+      <div class="h-16 w-16 rounded-full bg-brand-red/10 flex items-center justify-center border border-brand-red/30 mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-brand-red">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v-6.75a2.25 2.25 0 0 0 2.25-2.25Z" />
+        </svg>
+      </div>
+      
+      <h2 class="font-display text-2xl font-bold tracking-tight text-white mb-2">LWS Control Access</h2>
+      <p class="text-xs text-zinc-400 text-center mb-6 max-w-xs">
+        Enter your Supabase Service Role Key. Your key is stored locally in your browser and never leaves your machine.
+      </p>
+
+      <form id="lock-form" class="w-full space-y-4">
+        <div>
+          <label for="service-key" class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Service Role Key</label>
+          <input 
+            type="password" 
+            id="service-key" 
+            required 
+            placeholder="eyJhbGciOi..." 
+            class="w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 rounded-lg text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red transition-all"
+          >
+        </div>
+        <button 
+          type="submit" 
+          class="w-full py-3 bg-brand-red hover:bg-brand-hover text-white text-sm font-semibold rounded-lg transition-all glow-red-btn flex items-center justify-center gap-2 cursor-pointer"
+        >
+          Unlock Dashboard
+        </button>
+      </form>
+      <div class="mt-6 text-center">
+        <a href="/" class="text-xs text-zinc-400 hover:text-white transition-colors">← Back to Storefront</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN APP LAYOUT ================= -->
+  <div id="app" class="hidden flex-1 flex flex-col md:flex-row min-h-screen">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-64 glass border-t-0 border-l-0 border-b-0 border-r border-zinc-800/80 flex flex-col">
+      <div class="p-6 border-b border-zinc-800/80 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2">
+          <div class="h-8 w-8 rounded-full bg-brand-red flex items-center justify-center text-white font-bold text-sm tracking-tighter">LWS</div>
+          <span class="font-display text-lg font-bold tracking-tight text-white">LWS Control</span>
+        </a>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex-1 p-4 space-y-2">
+        <button 
+          onclick="switchTab('products')" 
+          id="tab-btn-products"
+          class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left bg-brand-red/10 text-brand-red border border-brand-red/20"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581a1.125 1.125 0 0 0 1.591 0l7.181-7.181a1.125 1.125 0 0 0 0-1.591l-9.581-9.581A2.25 2.25 0 0 0 9.568 3Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+          </svg>
+          Manage Products
+        </button>
+
+        <button 
+          onclick="switchTab('reviews')" 
+          id="tab-btn-reviews"
+          class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499c.173-.439.817-.439.99 0l2.4 4.868 5.378.78c.477.069.667.66.322.99l-3.89 3.798 1.17 5.347c.101.46-.38.81-.79.583L12 17.21l-4.81 2.527c-.41.216-.891-.133-.79-.583l1.17-5.347-3.89-3.798c-.345-.33-.156-.92.322-.99l5.378-.78 2.4-4.868Z" />
+          </svg>
+          Manage Reviews
+        </button>
+
+        <button 
+          onclick="switchTab('orders')" 
+          id="tab-btn-orders"
+          class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+          </svg>
+          View Orders
+        </button>
+
+        <button 
+          onclick="switchTab('users')" 
+          id="tab-btn-users"
+          class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A11.386 11.386 0 0 1 10.089 21c-2.243 0-4.32-.647-6.079-1.763M15 19.128c-.015-.044-.03-.087-.044-.131M8.618 13.04a6.37 6.37 0 0 1 2.764-.372 6.337 6.337 0 0 1 2.764.372 4.125 4.125 0 0 1 1.764 3.733H6.854a4.125 4.125 0 0 1 1.764-3.733ZM12 11.25a3.375 3.375 0 1 0 0-6.75 3.375 3.375 0 0 0 0 6.75ZM18.75 9a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" />
+          </svg>
+          Manage Users
+        </button>
+
+        <button 
+          onclick="switchTab('logs')" 
+          id="tab-btn-logs"
+          class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
+          </svg>
+          Logs &amp; Stats
+        </button>
+
+        <button 
+          onclick="switchTab('payments')" 
+          id="tab-btn-payments"
+          class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 21Z" />
+          </svg>
+          Payment Screenshots
+          <span id="payments-badge" class="ml-auto bg-brand-red text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+        </button>
+      </nav>
+
+
+      <!-- Sidebar Footer -->
+      <div class="p-4 border-t border-zinc-800/80 space-y-2">
+        <div class="flex items-center gap-3 px-4 py-2 rounded-lg text-xs text-zinc-500">
+          <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+          Authenticated as Admin
+        </div>
+        <button 
+          onclick="logout()" 
+          class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 cursor-pointer"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+          </svg>
+          Lock Dashboard
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 md:p-8 overflow-y-auto no-scrollbar max-w-7xl mx-auto w-full">
+      
+      <!-- Products Tab Content -->
+      <section id="content-products" class="space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 class="font-display text-3xl font-extrabold tracking-tight text-white">Products Management</h1>
+            <p class="text-zinc-400 text-sm mt-1">Add, update, or remove digital tool products from the database.</p>
+          </div>
+          <button 
+            onclick="openAddModal()" 
+            class="px-5 py-2.5 bg-brand-red hover:bg-brand-hover text-white text-sm font-semibold rounded-lg transition-all glow-red-btn flex items-center gap-2 cursor-pointer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Add New Product
+          </button>
+        </div>
+
+        <!-- Filter & Search Panel -->
+        <div class="glass p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div class="relative w-full md:w-80">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-zinc-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </span>
+            <input 
+              type="text" 
+              id="search-products" 
+              placeholder="Search tools..." 
+              oninput="filterProducts()"
+              class="w-full pl-10 pr-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all"
+            >
+          </div>
+          <div class="flex gap-2 w-full md:w-auto">
+            <select 
+              id="filter-category" 
+              onchange="filterProducts()" 
+              class="flex-1 md:flex-none px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-sm text-zinc-300 focus:outline-none focus:border-brand-red"
+            >
+              <option value="All">All Categories</option>
+              <option value="Streaming">Streaming</option>
+              <option value="AI">AI</option>
+              <option value="Design">Design</option>
+              <option value="SEO">SEO</option>
+              <option value="Video">Video</option>
+              <option value="Education">Education</option>
+              <option value="Security">Security</option>
+              <option value="Productivity">Productivity</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Table Listing -->
+        <div class="glass rounded-xl overflow-hidden overflow-x-auto glow-red">
+          <table class="w-full border-collapse text-left text-sm text-zinc-400">
+            <thead class="bg-zinc-900/80 text-zinc-200 uppercase tracking-wider text-xs border-b border-zinc-800">
+              <tr>
+                <th scope="col" class="px-6 py-4 font-semibold">Product</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Category</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Warranty</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Status</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Trending</th>
+                <th scope="col" class="px-6 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body" class="divide-y divide-zinc-800/80 bg-zinc-950/20">
+              <!-- Dynamically Populated -->
+              <tr>
+                <td colspan="6" class="px-6 py-12 text-center text-zinc-500">
+                  <div class="flex flex-col items-center gap-3">
+                    <svg class="animate-spin h-6 w-6 text-brand-red" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    Loading products...
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Reviews Tab Content -->
+      <section id="content-reviews" class="hidden space-y-6">
+        <div>
+          <h1 class="font-display text-3xl font-extrabold tracking-tight text-white">Reviews Management</h1>
+          <p class="text-zinc-400 text-sm mt-1">Approve or remove customer reviews shown on the website homepage.</p>
+        </div>
+
+        <div class="glass rounded-xl overflow-hidden overflow-x-auto glow-red">
+          <table class="w-full border-collapse text-left text-sm text-zinc-400">
+            <thead class="bg-zinc-900/80 text-zinc-200 uppercase tracking-wider text-xs border-b border-zinc-800">
+              <tr>
+                <th scope="col" class="px-6 py-4 font-semibold">Customer</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Rating</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Message</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Approved</th>
+                <th scope="col" class="px-6 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="reviews-table-body" class="divide-y divide-zinc-800/80 bg-zinc-950/20">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Orders Tab Content -->
+      <section id="content-orders" class="hidden space-y-6">
+        <div>
+          <h1 class="font-display text-3xl font-extrabold tracking-tight text-white">Orders List</h1>
+          <p class="text-zinc-400 text-sm mt-1">View leads and purchase requests recorded when users check out.</p>
+        </div>
+
+        <div class="glass rounded-xl overflow-hidden overflow-x-auto glow-red">
+          <table class="w-full border-collapse text-left text-sm text-zinc-400">
+            <thead class="bg-zinc-900/80 text-zinc-200 uppercase tracking-wider text-xs border-b border-zinc-800">
+              <tr>
+                <th scope="col" class="px-6 py-4 font-semibold">Order ID</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Customer ID</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Ordered Items</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Status</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Date</th>
+                <th scope="col" class="px-6 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body" class="divide-y divide-zinc-800/80 bg-zinc-950/20">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Users Tab Content -->
+      <section id="content-users" class="hidden space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 class="font-display text-3xl font-extrabold tracking-tight text-white">Registered Users</h1>
+            <p class="text-zinc-400 text-sm mt-1">View and manage customer registrations from Supabase Auth.</p>
+          </div>
+          <div class="flex gap-2">
+            <button 
+              onclick="loadUsers()" 
+              class="px-4 py-2 border border-zinc-800 hover:bg-zinc-900 text-zinc-300 text-sm font-semibold rounded-lg transition-colors cursor-pointer animate-pulse text-white"
+            >
+              Refresh Users
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter & Search Users -->
+        <div class="glass p-4 rounded-xl">
+          <div class="relative w-full md:w-80">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-zinc-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </span>
+            <input 
+              type="text" 
+              id="search-users" 
+              placeholder="Search by email..." 
+              oninput="filterUsers()"
+              class="w-full pl-10 pr-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all"
+            >
+          </div>
+        </div>
+
+        <!-- Table Listing -->
+        <div class="glass rounded-xl overflow-hidden overflow-x-auto glow-red">
+          <table class="w-full border-collapse text-left text-sm text-zinc-400">
+            <thead class="bg-zinc-900/80 text-zinc-200 uppercase tracking-wider text-xs border-b border-zinc-800">
+              <tr>
+                <th scope="col" class="px-6 py-4 font-semibold">User Email</th>
+                <th scope="col" class="px-6 py-4 font-semibold">User ID</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Status</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Joined Date</th>
+                <th scope="col" class="px-6 py-4 font-semibold">Last Sign In</th>
+                <th scope="col" class="px-6 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body" class="divide-y divide-zinc-800/80 bg-zinc-950/20">
+              <tr>
+                <td colspan="6" class="px-6 py-12 text-center text-zinc-500">
+                  No users loaded. Click "Refresh Users" to retrieve registered accounts.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Logs & Stats Tab Content -->
+      <section id="content-logs" class="hidden space-y-6">
+        <div>
+          <h1 class="font-display text-3xl font-extrabold tracking-tight text-white">Logs &amp; Store Analytics</h1>
+          <p class="text-zinc-400 text-sm mt-1">Real-time stats, conversion activity, and server logs.</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="glass p-6 rounded-2xl glow-red">
+            <div class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Total Products</div>
+            <div class="font-display text-4xl font-extrabold text-white mt-2" id="stats-products">-</div>
+          </div>
+          <div class="glass p-6 rounded-2xl glow-red">
+            <div class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Total Registrations</div>
+            <div class="font-display text-4xl font-extrabold text-white mt-2" id="stats-users">-</div>
+          </div>
+          <div class="glass p-6 rounded-2xl glow-red">
+            <div class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Approved Reviews</div>
+            <div class="font-display text-4xl font-extrabold text-white mt-2" id="stats-reviews">-</div>
+          </div>
+          <div class="glass p-6 rounded-2xl glow-red">
+            <div class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Total Purchase Leads</div>
+            <div class="font-display text-4xl font-extrabold text-white mt-2" id="stats-orders">-</div>
+          </div>
+        </div>
+
+        <!-- Logs & Timeline -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Recent Registration Logs -->
+          <div class="glass p-6 rounded-2xl space-y-4">
+            <h3 class="font-display text-lg font-bold text-white flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-brand-red">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+              </svg>
+              Recent Registration Activity
+            </h3>
+            <div id="logs-registrations-container" class="space-y-3 max-h-[350px] overflow-y-auto pr-2 no-scrollbar">
+              <!-- Dynamically Populated -->
+            </div>
+          </div>
+
+          <!-- Database / Event Logs -->
+          <div class="glass p-6 rounded-2xl space-y-4">
+            <h3 class="font-display text-lg font-bold text-white flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-brand-red">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6a2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+              </svg>
+              Database Action Logs
+            </h3>
+            <div id="logs-db-container" class="space-y-3 max-h-[350px] overflow-y-auto pr-2 no-scrollbar">
+              <!-- Dynamically Populated -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Payment Screenshots Tab -->
+      <section id="content-payments" class="hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="font-display text-3xl font-extrabold tracking-tight text-white">Payment Screenshots</h1>
+            <p class="text-zinc-400 text-sm mt-1">Users ki payment proofs yahan show hongi — verify karein aur orders activate karein.</p>
+          </div>
+          <button onclick="loadPaymentSubmissions()" class="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white text-sm font-semibold rounded-lg transition-all flex items-center gap-2 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+            Refresh
+          </button>
+        </div>
+
+        <div id="payments-container" class="space-y-4">
+          <div class="glass p-8 rounded-2xl text-center text-zinc-500">Loading payment submissions...</div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= ADD / EDIT PRODUCT MODAL ================= -->
+  <div id="product-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm transition-all duration-300">
+    <div class="glass w-full max-w-xl rounded-2xl overflow-hidden glow-red max-h-[90vh] flex flex-col scale-95 transition-transform duration-300">
+      
+      <div class="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/60">
+        <h2 id="modal-title" class="font-display text-xl font-bold text-white">Add New Product</h2>
+        <button onclick="closeProductModal()" class="text-zinc-400 hover:text-white transition-colors cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="product-form" onsubmit="handleProductSubmit(event)" class="p-6 overflow-y-auto no-scrollbar space-y-4 flex-1">
+        <input type="hidden" id="form-product-id">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Product Name *</label>
+            <input 
+              type="text" 
+              id="form-name" 
+              required 
+              placeholder="e.g. Canva Pro" 
+              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Slug (Unique URL Name) *</label>
+            <input 
+              type="text" 
+              id="form-slug" 
+              required 
+              placeholder="e.g. canva-pro-1year" 
+              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all"
+            >
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Category *</label>
+            <select 
+              id="form-category" 
+              required 
+              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-zinc-300 focus:outline-none focus:border-brand-red"
+            >
+              <option value="Streaming">Streaming</option>
+              <option value="AI">AI</option>
+              <option value="Design">Design</option>
+              <option value="SEO">SEO</option>
+              <option value="Video">Video</option>
+              <option value="Education">Education</option>
+              <option value="Security">Security</option>
+              <option value="Productivity">Productivity</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Warranty Text *</label>
+            <input 
+              type="text" 
+              id="form-warranty" 
+              required 
+              placeholder="e.g. 1 Year Replacement Warranty" 
+              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Description *</label>
+          <textarea 
+            id="form-description" 
+            required 
+            rows="3" 
+            placeholder="Provide a premium description detailing account features..." 
+            class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Icon Image URL</label>
+            <input 
+              type="url" 
+              id="form-icon-url" 
+              placeholder="https://example.com/logo.png" 
+              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Invite/Direct Link (Optional)</label>
+            <input 
+              type="text" 
+              id="form-canva-link" 
+              placeholder="Canva team invite code/link" 
+              class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all"
+            >
+          </div>
+        </div>
+
+        <div class="flex gap-6 pt-2">
+          <label class="flex items-center gap-3 cursor-pointer text-sm">
+            <input 
+              type="checkbox" 
+              id="form-is-active" 
+              checked 
+              class="w-4 h-4 rounded text-brand-red focus:ring-brand-red bg-zinc-950 border-zinc-800"
+            >
+            <span>Product Active (Listed for sale)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer text-sm">
+            <input 
+              type="checkbox" 
+              id="form-is-trending" 
+              class="w-4 h-4 rounded text-brand-red focus:ring-brand-red bg-zinc-950 border-zinc-800"
+            >
+            <span>Trending Product 🔥</span>
+          </label>
+        </div>
+
+        <div class="pt-4 border-t border-zinc-800 flex justify-end gap-3 bg-zinc-900/30 -mx-6 -mb-6 p-6">
+          <button 
+            type="button" 
+            onclick="closeProductModal()" 
+            class="px-4 py-2 border border-zinc-800 hover:bg-zinc-900 text-zinc-300 text-sm font-semibold rounded-lg transition-colors cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="px-6 py-2 bg-brand-red hover:bg-brand-hover text-white text-sm font-semibold rounded-lg transition-all glow-red-btn cursor-pointer"
+          >
+            Save Product
+          </button>
+        </div>
+    </div>
+  </div>
+
+  <!-- ================= VERIFY & MANAGE ORDER MODAL ================= -->
+  <div id="order-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm transition-all duration-300">
+    <div class="glass w-full max-w-xl rounded-2xl overflow-hidden glow-red max-h-[90vh] flex flex-col scale-95 transition-transform duration-300">
+      
+      <div class="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/60">
+        <h2 class="font-display text-xl font-bold text-white">Manage Order &amp; Delivery</h2>
+        <button onclick="closeOrderModal()" class="text-zinc-400 hover:text-white transition-colors cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="order-form" onsubmit="handleOrderSubmit(event)" class="p-6 overflow-y-auto no-scrollbar space-y-4 flex-1">
+        <input type="hidden" id="form-order-id">
+        
+        <div class="grid grid-cols-2 gap-4 bg-zinc-900/30 p-4 rounded-xl border border-zinc-800 text-xs">
+          <div>
+            <span class="text-zinc-500 font-semibold uppercase tracking-wider block">Order ID</span>
+            <span id="order-modal-id" class="font-mono text-zinc-300 font-bold block mt-1">-</span>
+          </div>
+          <div>
+            <span class="text-zinc-500 font-semibold uppercase tracking-wider block">Customer UUID</span>
+            <span id="order-modal-user" class="font-mono text-zinc-300 block mt-1">-</span>
+          </div>
+          <div class="col-span-2">
+            <span class="text-zinc-500 font-semibold uppercase tracking-wider block">Ordered Items</span>
+            <div id="order-modal-items" class="text-zinc-200 font-semibold mt-1">-</div>
+          </div>
+        </div>
+
+        <!-- Receipt Screenshot Preview -->
+        <div id="order-modal-receipt-container" class="hidden space-y-2">
+          <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider">Submitted Receipt Proof</label>
+          <div class="bg-black/60 p-3 rounded-xl border border-zinc-800 text-center relative group">
+            <img id="order-modal-receipt-img" src="#" class="max-h-[220px] w-auto mx-auto rounded-lg object-contain cursor-pointer transition-transform hover:scale-105" title="Click to view in new tab" onclick="window.open(this.src)">
+            <p class="text-[10px] text-zinc-500 mt-2">Submitted via <span id="order-modal-payment-method" class="text-zinc-300 font-semibold">-</span></p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Order Status *</label>
+            <select id="form-order-status" required class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all" onchange="toggleOrderFields()">
+              <option value="requested">Payment Pending (Requested)</option>
+              <option value="pending_verification">Awaiting Verification</option>
+              <option value="active">Active &amp; Delivered</option>
+              <option value="rejected">Payment Rejected</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Delivery Credentials Details -->
+        <div id="field-delivery-details" class="hidden">
+          <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Delivery Details / Logins / Invites</label>
+          <textarea 
+            id="form-order-delivery" 
+            rows="4" 
+            placeholder="Enter Canva team invite link, account emails/passwords, or setup instructions. The customer will see this instantly in their dashboard." 
+            class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red font-mono text-xs transition-all"
+          ></textarea>
+        </div>
+
+        <!-- Rejection Notes -->
+        <div id="field-rejection-notes" class="hidden">
+          <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">Rejection Reason (Shown to customer)</label>
+          <textarea 
+            id="form-order-rejection" 
+            rows="3" 
+            placeholder="e.g. Screenshot duplicate or payment not received. Try re-uploading." 
+            class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-brand-red transition-all"
+          ></textarea>
+        </div>
+
+        <div class="pt-4 border-t border-zinc-800 flex justify-end gap-3 bg-zinc-900/30 -mx-6 -mb-6 p-6">
+          <button 
+            type="button" 
+            onclick="closeOrderModal()" 
+            class="px-4 py-2 border border-zinc-800 hover:bg-zinc-900 text-zinc-300 text-sm font-semibold rounded-lg transition-colors cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="px-6 py-2 bg-brand-red hover:bg-brand-hover text-white text-sm font-semibold rounded-lg transition-all glow-red-btn cursor-pointer"
+          >
+            Update Order
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= CORE SCRIPTS ================= -->
+  <script>
+    // Constants
+    const SUPABASE_URL = 'https://fgojtnpkpgnmqfngegmq.supabase.co';
+    const PUBLIC_KEY = 'sb_publishable_OgCODbZEPOYhEeafZ3LkXQ_u24hkELq';
+
+    // State Variables
+    let dbClient = null;
+    let productsList = [];
+    let currentTab = 'products';
+
+    // DOM Elements
+    const lockScreen = document.getElementById('lock-screen');
+    const lockForm = document.getElementById('lock-form');
+    const serviceKeyInput = document.getElementById('service-key');
+    const appContainer = document.getElementById('app');
+    
+    // Toast Notification System
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const colors = {
+        success: 'border-emerald-500/30 text-emerald-400 bg-emerald-950/80',
+        error: 'border-rose-500/30 text-rose-400 bg-rose-950/80',
+        info: 'border-sky-500/30 text-sky-400 bg-sky-950/80'
+      };
+
+      toast.className = `glass p-4 rounded-xl flex items-center gap-3 border shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto ${colors[type] || colors.success}`;
+      
+      // Icon
+      let icon = '';
+      if (type === 'success') {
+        icon = `<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+      } else if (type === 'error') {
+        icon = `<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+      } else {
+        icon = `<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+      }
+
+      toast.innerHTML = `
+        ${icon}
+        <span class="text-sm font-medium">${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      // Animate In
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 50);
+
+      // Remove after 4s
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // Initialize App & Verify Saved Keys
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedKey = localStorage.getItem('supabase_service_key');
+      if (savedKey) {
+        serviceKeyInput.value = savedKey;
+        initializeDashboard(savedKey);
+      }
+    });
+
+    // Handle Access Form Submit
+    lockForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const enteredKey = serviceKeyInput.value.trim();
+      if (enteredKey) {
+        initializeDashboard(enteredKey);
+      }
+    });
+
+    // Initialize Supabase Client with Key
+    async function initializeDashboard(apiKey) {
+      try {
+        const { createClient } = supabase;
+        dbClient = createClient(SUPABASE_URL, apiKey);
+        
+        // Test key verification by performing a simple query on tools table
+        const { data, error } = await dbClient.from('tools').select('*').limit(1);
+        if (error) throw error;
+        
+        // Save valid key to localStorage
+        localStorage.setItem('supabase_service_key', apiKey);
+        
+        // Transition Screen
+        lockScreen.classList.add('opacity-0', 'pointer-events-none');
+        appContainer.classList.remove('hidden');
+        
+        showToast('Secure Dashboard Access Granted!', 'success');
+        
+        // Load default tab content
+        loadProducts();
+      } catch (err) {
+        console.error(err);
+        showToast('Invalid Access Key or Network Error', 'error');
+        localStorage.removeItem('supabase_service_key');
+      }
+    }
+
+    // Switch Tabs
+    function switchTab(tabName) {
+      currentTab = tabName;
+      
+      // Update Tab Navigation Styles
+      const tabs = ['products', 'reviews', 'orders', 'users', 'logs', 'payments'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const content = document.getElementById(`content-${t}`);
+        if (!btn || !content) return;
+        
+        if (t === tabName) {
+          btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left bg-brand-red/10 text-brand-red border border-brand-red/20";
+          content.classList.remove('hidden');
+        } else {
+          btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-left text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent";
+          content.classList.add('hidden');
+        }
+      });
+
+      // Load data corresponding to tab
+      if (tabName === 'products') loadProducts();
+      else if (tabName === 'reviews') loadReviews();
+      else if (tabName === 'orders') loadOrders();
+      else if (tabName === 'users') loadUsers();
+      else if (tabName === 'logs') loadLogsAndStats();
+      else if (tabName === 'payments') loadPaymentSubmissions();
+    }
+
+    // ── Payment Submissions Panel ─────────────────────────────────────────
+    async function loadPaymentSubmissions() {
+      const container = document.getElementById('payments-container');
+      container.innerHTML = '<div class="glass p-8 rounded-2xl text-center text-zinc-500">Loading...</div>';
+      
+      try {
+        const { data, error } = await dbClient
+          .from('payment_submissions')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          container.innerHTML = '<div class="glass p-8 rounded-2xl text-center text-zinc-500">Abhi tak koi payment screenshot submit nahi hua.</div>';
+          document.getElementById('payments-badge').classList.add('hidden');
+          return;
+        }
+
+        const pending = data.filter(d => d.status === 'pending').length;
+        if (pending > 0) {
+          const badge = document.getElementById('payments-badge');
+          badge.textContent = pending;
+          badge.classList.remove('hidden');
+        }
+
+        container.innerHTML = data.map(sub => {
+          const date = new Date(sub.created_at).toLocaleString('en-PK');
+          const statusColors = {
+            'pending': 'bg-amber-950/60 text-amber-400 border-amber-500/30',
+            'approved': 'bg-emerald-950/60 text-emerald-400 border-emerald-500/30',
+            'rejected': 'bg-rose-950/60 text-rose-400 border-rose-500/30'
+          };
+          const sc = statusColors[sub.status] || statusColors.pending;
+
+          return `
+            <div class="glass p-6 rounded-2xl space-y-4">
+              <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p class="text-white font-bold text-sm">${sub.user_email || 'Unknown User'}</p>
+                  <p class="text-zinc-500 text-xs mt-0.5">${date}</p>
+                  ${sub.tool_note ? `<p class="text-zinc-300 text-xs mt-1">📦 Tool: <span class="font-semibold">${sub.tool_note}</span></p>` : ''}
+                </div>
+                <span class="border text-xs font-bold px-3 py-1 rounded-full ${sc}">${sub.status?.toUpperCase() || 'PENDING'}</span>
+              </div>
+
+              ${sub.screenshot_url ? `
+              <div class="bg-black/40 p-3 rounded-xl border border-zinc-800">
+                <img src="${sub.screenshot_url}" alt="Payment Screenshot" 
+                     class="max-h-60 mx-auto rounded-lg cursor-pointer hover:scale-105 transition-transform object-contain"
+                     onclick="window.open('${sub.screenshot_url}', '_blank')"
+                     title="Click to open full size">
+                <p class="text-center text-zinc-500 text-xs mt-2">Click image to open full size</p>
+              </div>` : '<div class="text-zinc-500 text-sm p-3">No screenshot attached. User sent via WhatsApp.</div>'}
+
+              ${sub.status === 'pending' ? `
+              <div class="flex gap-3">
+                <button onclick="updatePaymentStatus('${sub.id}', 'approved')" 
+                        class="flex-1 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-semibold text-sm rounded-xl transition-all cursor-pointer">
+                  ✅ Approve & Mark Verified
+                </button>
+                <button onclick="updatePaymentStatus('${sub.id}', 'rejected')"
+                        class="flex-1 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-semibold text-sm rounded-xl transition-all cursor-pointer">
+                  ❌ Reject
+                </button>
+              </div>` : `
+              <p class="text-xs text-zinc-600 font-semibold uppercase tracking-wider">Action: ${sub.status} on ${new Date(sub.updated_at || sub.created_at).toLocaleDateString()}</p>`}
+            </div>`;
+        }).join('');
+
+      } catch (err) {
+        container.innerHTML = `
+          <div class="glass p-6 rounded-2xl text-center space-y-3">
+            <p class="text-rose-400 font-semibold">⚠️ Could not load payment submissions</p>
+            <p class="text-zinc-500 text-sm">Make sure <code class="text-zinc-300">payment_submissions</code> table exists in Supabase.</p>
+            <p class="text-zinc-600 text-xs">${err.message}</p>
+          </div>`;
+      }
+    }
+
+    async function updatePaymentStatus(id, status) {
+      try {
+        const { error } = await dbClient
+          .from('payment_submissions')
+          .update({ status, updated_at: new Date().toISOString() })
+          .eq('id', id);
+
+        if (error) throw error;
+        showToast(`Payment ${status === 'approved' ? 'Approved ✅' : 'Rejected ❌'}`, status === 'approved' ? 'success' : 'error');
+        loadPaymentSubmissions();
+      } catch (err) {
+        showToast('Update failed: ' + err.message, 'error');
+      }
+    }
+
+    // Lock Dashboard & Log Out
+    function logout() {
+      localStorage.removeItem('supabase_service_key');
+      dbClient = null;
+      appContainer.classList.add('hidden');
+      lockScreen.classList.remove('opacity-0', 'pointer-events-none');
+      serviceKeyInput.value = '';
+      showToast('Logged Out Successfully', 'info');
+    }
+
+    // =========================================================================
+    // PRODUCTS MANAGEMENT CRUD
+    // =========================================================================
+
+    // Fetch and Load Products
+    async function loadProducts() {
+      const tbody = document.getElementById('products-table-body');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="px-6 py-12 text-center text-zinc-500">
+            <div class="flex flex-col items-center gap-3">
+              <svg class="animate-spin h-6 w-6 text-brand-red" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              Updating product database view...
+            </div>
+          </td>
+        </tr>
+      `;
+
+      try {
+        const { data, error } = await dbClient.from('tools').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        
+        productsList = data || [];
+        renderProducts(productsList);
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to load products: ' + err.message, 'error');
+      }
+    }
+
+    // Render Products Table
+    function renderProducts(items) {
+      const tbody = document.getElementById('products-table-body');
+      if (items.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-6 py-12 text-center text-zinc-500">
+              No products found. Click "Add New Product" to populate items.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = items.map(item => {
+        const fallbackIcon = 'https://raw.githubusercontent.com/shadcn-ui/ui/main/apps/www/public/favicon.ico';
+        return `
+          <tr class="hover:bg-zinc-900/30 transition-colors">
+            <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+              <img 
+                src="${item.icon_url || fallbackIcon}" 
+                alt="${item.name}" 
+                onerror="this.src='${fallbackIcon}'"
+                class="w-8 h-8 rounded-lg bg-zinc-900 object-cover border border-zinc-800"
+              >
+              <div>
+                <div class="font-semibold text-zinc-100">${escapeHtml(item.name)}</div>
+                <div class="text-xs text-zinc-500">/${escapeHtml(item.slug)}</div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400">
+                ${escapeHtml(item.category)}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-xs max-w-[150px] truncate text-zinc-300">
+              ${escapeHtml(item.warranty_text || 'No warranty details')}
+            </td>
+            <td class="px-6 py-4">
+              ${item.is_active 
+                ? '<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>'
+                : '<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-800 text-zinc-500 border border-zinc-700">Inactive</span>'
+              }
+            </td>
+            <td class="px-6 py-4">
+              ${item.is_trending 
+                ? '<span class="inline-flex items-center gap-1 text-xs font-medium text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-full">🔥 Trending</span>'
+                : '<span class="text-zinc-600 text-xs">Standard</span>'
+              }
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex justify-end gap-2">
+                <button 
+                  onclick="openEditModal('${item.id}')" 
+                  class="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                  title="Edit Product"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.83 19.82a4.5 4.5 0 0 1-2.29 1.25L3 21l.794-3.58a4.5 4.5 0 0 1 1.249-2.29l12.838-12.839Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m13.729 6.879 2.622 2.622" />
+                  </svg>
+                </button>
+                <button 
+                  onclick="deleteProduct('${item.id}', '${escapeHtml(item.name)}')" 
+                  class="p-1.5 hover:bg-rose-500/10 rounded-lg text-zinc-500 hover:text-rose-400 transition-colors cursor-pointer"
+                  title="Delete Product"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Filter & Search Products
+    function filterProducts() {
+      const searchVal = document.getElementById('search-products').value.toLowerCase();
+      const categoryVal = document.getElementById('filter-category').value;
+      
+      const filtered = productsList.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(searchVal) || 
+                              item.slug.toLowerCase().includes(searchVal) || 
+                              item.description.toLowerCase().includes(searchVal);
+        const matchesCategory = categoryVal === 'All' || item.category === categoryVal;
+        
+        return matchesSearch && matchesCategory;
+      });
+
+      renderProducts(filtered);
+    }
+
+    // Open Modal for Addition
+    function openAddModal() {
+      document.getElementById('modal-title').textContent = 'Add New Product';
+      document.getElementById('form-product-id').value = '';
+      document.getElementById('product-form').reset();
+      
+      // Preset status checkbox defaults
+      document.getElementById('form-is-active').checked = true;
+      document.getElementById('form-is-trending').checked = false;
+
+      const modal = document.getElementById('product-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setTimeout(() => {
+        modal.firstElementChild.classList.remove('scale-95');
+      }, 50);
+    }
+
+    // Open Modal for Edit
+    function openEditModal(productId) {
+      const item = productsList.find(p => p.id === productId);
+      if (!item) return;
+
+      document.getElementById('modal-title').textContent = 'Edit Product Details';
+      document.getElementById('form-product-id').value = item.id;
+      document.getElementById('form-name').value = item.name;
+      document.getElementById('form-slug').value = item.slug;
+      document.getElementById('form-category').value = item.category;
+      document.getElementById('form-warranty').value = item.warranty_text || '';
+      document.getElementById('form-description').value = item.description || '';
+      document.getElementById('form-icon-url').value = item.icon_url || '';
+      document.getElementById('form-canva-link').value = item.canva_link || '';
+      
+      document.getElementById('form-is-active').checked = item.is_active;
+      document.getElementById('form-is-trending').checked = item.is_trending;
+
+      const modal = document.getElementById('product-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setTimeout(() => {
+        modal.firstElementChild.classList.remove('scale-95');
+      }, 50);
+    }
+
+    // Close Modal
+    function closeProductModal() {
+      const modal = document.getElementById('product-modal');
+      modal.firstElementChild.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }, 200);
+    }
+
+    // Form Submit Handler
+    async function handleProductSubmit(e) {
+      e.preventDefault();
+      
+      const productId = document.getElementById('form-product-id').value;
+      const payload = {
+        name: document.getElementById('form-name').value.trim(),
+        slug: document.getElementById('form-slug').value.trim().toLowerCase(),
+        category: document.getElementById('form-category').value,
+        warranty_text: document.getElementById('form-warranty').value.trim(),
+        description: document.getElementById('form-description').value.trim(),
+        icon_url: document.getElementById('form-icon-url').value.trim() || null,
+        canva_link: document.getElementById('form-canva-link').value.trim() || null,
+        is_active: document.getElementById('form-is-active').checked,
+        is_trending: document.getElementById('form-is-trending').checked
+      };
+
+      try {
+        if (productId) {
+          // Update
+          const { error } = await dbClient.from('tools').update(payload).eq('id', productId);
+          if (error) throw error;
+          showToast('Product updated successfully!', 'success');
+        } else {
+          // Insert
+          const { error } = await dbClient.from('tools').insert(payload);
+          if (error) throw error;
+          showToast('New product added successfully!', 'success');
+        }
+
+        closeProductModal();
+        loadProducts();
+      } catch (err) {
+        console.error(err);
+        showToast('Error saving product: ' + err.message, 'error');
+      }
+    }
+
+    // Delete Product
+    async function deleteProduct(productId, name) {
+      if (confirm(`Are you absolutely sure you want to delete "${name}"? This action cannot be undone.`)) {
+        try {
+          const { error } = await dbClient.from('tools').delete().eq('id', productId);
+          if (error) throw error;
+          showToast(`"${name}" was deleted successfully`, 'success');
+          loadProducts();
+        } catch (err) {
+          console.error(err);
+          showToast('Error deleting product: ' + err.message, 'error');
+        }
+      }
+    }
+
+    // =========================================================================
+    // REVIEWS MANAGEMENT
+    // =========================================================================
+
+    // Fetch and Load Reviews
+    async function loadReviews() {
+      const tbody = document.getElementById('reviews-table-body');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="px-6 py-12 text-center text-zinc-500">Loading reviews...</td>
+        </tr>
+      `;
+
+      try {
+        const { data, error } = await dbClient.from('reviews').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        
+        renderReviews(data || []);
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to load reviews: ' + err.message, 'error');
+      }
+    }
+
+    // Render Reviews Table
+    function renderReviews(reviews) {
+      const tbody = document.getElementById('reviews-table-body');
+      if (reviews.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="px-6 py-12 text-center text-zinc-500">No reviews found in the database.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = reviews.map(rev => {
+        // Draw rating stars
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+          stars += `<svg class="w-4 h-4 ${i <= rev.rating ? 'text-amber-400 fill-amber-400' : 'text-zinc-700'}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+          </svg>`;
+        }
+
+        return `
+          <tr class="hover:bg-zinc-900/30 transition-colors">
+            <td class="px-6 py-4 font-semibold text-white">${escapeHtml(rev.name || 'Anonymous')}</td>
+            <td class="px-6 py-4"><div class="flex gap-0.5">${stars}</div></td>
+            <td class="px-6 py-4 text-xs text-zinc-300 max-w-sm truncate" title="${escapeHtml(rev.message)}">
+              ${escapeHtml(rev.message)}
+            </td>
+            <td class="px-6 py-4">
+              <button 
+                onclick="toggleReviewApproval('${rev.id}', ${rev.approved})" 
+                class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${rev.approved 
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20' 
+                  : 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:bg-zinc-700'
+                }"
+              >
+                ${rev.approved ? 'Approved' : 'Unapproved'}
+              </button>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <button 
+                onclick="deleteReview('${rev.id}')" 
+                class="p-1.5 hover:bg-rose-500/10 rounded-lg text-zinc-500 hover:text-rose-400 transition-colors cursor-pointer"
+                title="Delete Review"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Toggle Review Approval Status
+    async function toggleReviewApproval(reviewId, currentStatus) {
+      try {
+        const { error } = await dbClient.from('reviews').update({ approved: !currentStatus }).eq('id', reviewId);
+        if (error) throw error;
+        
+        showToast(`Review status updated to ${!currentStatus ? 'Approved' : 'Unapproved'}`, 'success');
+        loadReviews();
+      } catch (err) {
+        console.error(err);
+        showToast('Error updating review: ' + err.message, 'error');
+      }
+    }
+
+    // Delete Review
+    async function deleteReview(reviewId) {
+      if (confirm('Delete this review? It will be removed permanently from the database.')) {
+        try {
+          const { error } = await dbClient.from('reviews').delete().eq('id', reviewId);
+          if (error) throw error;
+          showToast('Review deleted successfully', 'success');
+          loadReviews();
+        } catch (err) {
+          console.error(err);
+          showToast('Error deleting review: ' + err.message, 'error');
+        }
+      }
+    }
+
+    // =========================================================================
+    // ORDERS VIEWING & VERIFICATION
+    // =========================================================================
+    let ordersListCached = [];
+
+    // Fetch and Load Orders
+    async function loadOrders() {
+      const tbody = document.getElementById('orders-table-body');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="px-6 py-12 text-center text-zinc-500">Loading purchase orders...</td>
+        </tr>
+      `;
+
+      try {
+        const { data, error } = await dbClient.from('orders').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        
+        ordersListCached = data || [];
+        renderOrders(ordersListCached);
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to load orders: ' + err.message, 'error');
+      }
+    }
+
+    // Render Orders Table
+    function renderOrders(ordersList) {
+      const tbody = document.getElementById('orders-table-body');
+      if (ordersList.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-6 py-12 text-center text-zinc-500">No client orders recorded.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = ordersList.map(ord => {
+        // Parse items JSON/array safely
+        let itemsStr = '';
+        try {
+          const items = Array.isArray(ord.items) ? ord.items : JSON.parse(ord.items || '[]');
+          itemsStr = items.map(item => {
+            return `<div class="text-xs bg-zinc-900 border border-zinc-800 rounded px-2 py-0.5 mt-0.5 inline-block text-zinc-300">
+              ${escapeHtml(item.toolName || item.name || 'Digital Tool')} 
+              ${item.planName ? `(${escapeHtml(item.planName)})` : ''}
+            </div>`;
+          }).join(' ');
+        } catch (e) {
+          itemsStr = '<span class="text-zinc-600">Error parsing items</span>';
+        }
+
+        const orderDate = ord.created_at 
+          ? new Date(ord.created_at).toLocaleString() 
+          : 'Unknown date';
+
+        // Build Status Badge
+        let statusBadge = '';
+        const status = ord.status ? ord.status.toLowerCase() : 'requested';
+        if (status === 'active' || status === 'delivered') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active/Delivered</span>';
+        } else if (status === 'pending_verification') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">Awaiting Verification</span>';
+        } else if (status === 'rejected') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Rejected</span>';
+        } else {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-800 text-zinc-400 border border-zinc-700">Requested</span>';
+        }
+
+        // View Receipt Indicator
+        const hasReceipt = ord.screenshot_url 
+          ? `<span class="inline-flex items-center text-xs text-brand-red font-semibold hover:underline cursor-pointer" onclick="openOrderModal('${ord.id}')">📎 Receipt</span>` 
+          : '<span class="text-zinc-600 text-xs">No Proof</span>';
+
+        return `
+          <tr class="hover:bg-zinc-900/30 transition-colors">
+            <td class="px-6 py-4 font-mono text-xs text-zinc-500 max-w-[100px] truncate" title="${ord.id}">
+              ${ord.id}
+            </td>
+            <td class="px-6 py-4 font-mono text-xs text-zinc-400 max-w-[120px] truncate" title="${ord.user_id || 'Guest'}">
+              ${ord.user_id || 'Guest Lead'}
+            </td>
+            <td class="px-6 py-4 max-w-[280px]">
+              <div class="flex flex-wrap gap-1">${itemsStr}</div>
+            </td>
+            <td class="px-6 py-4 flex flex-col gap-1 items-start">
+              ${statusBadge}
+              ${hasReceipt}
+            </td>
+            <td class="px-6 py-4 text-xs text-zinc-500">${orderDate}</td>
+            <td class="px-6 py-4 text-right">
+              <button 
+                onclick="openOrderModal('${ord.id}')" 
+                class="px-3 py-1.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:border-brand-red text-xs text-zinc-300 hover:text-white rounded-lg transition-colors cursor-pointer"
+              >
+                Manage
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Modal Control functions
+    function openOrderModal(orderId) {
+      const ord = ordersListCached.find(o => o.id === orderId);
+      if (!ord) return;
+
+      document.getElementById('form-order-id').value = ord.id;
+      document.getElementById('order-modal-id').textContent = ord.id;
+      document.getElementById('order-modal-user').textContent = ord.user_id || 'Guest User';
+
+      // Parse items details
+      let itemsStr = '';
+      try {
+        const items = Array.isArray(ord.items) ? ord.items : JSON.parse(ord.items || '[]');
+        itemsStr = items.map(item => `${item.toolName} (${item.planName})`).join(', ');
+      } catch (e) {
+        itemsStr = 'Unknown items';
+      }
+      document.getElementById('order-modal-items').textContent = itemsStr;
+
+      // Check for Receipt
+      if (ord.screenshot_url) {
+        document.getElementById('order-modal-receipt-img').src = ord.screenshot_url;
+        document.getElementById('order-modal-payment-method').textContent = ord.payment_method || 'Unknown';
+        document.getElementById('order-modal-receipt-container').classList.remove('hidden');
+      } else {
+        document.getElementById('order-modal-receipt-container').classList.add('hidden');
+      }
+
+      // Set fields value
+      document.getElementById('form-order-status').value = ord.status || 'requested';
+      document.getElementById('form-order-delivery').value = ord.delivered_details || '';
+      document.getElementById('form-order-rejection').value = ord.rejection_notes || '';
+
+      toggleOrderFields();
+
+      const modal = document.getElementById('order-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeOrderModal() {
+      const modal = document.getElementById('order-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function toggleOrderFields() {
+      const status = document.getElementById('form-order-status').value;
+      const deliveryDiv = document.getElementById('field-delivery-details');
+      const rejectionDiv = document.getElementById('field-rejection-notes');
+
+      if (status === 'active' || status === 'delivered') {
+        deliveryDiv.classList.remove('hidden');
+        rejectionDiv.classList.add('hidden');
+      } else if (status === 'rejected') {
+        deliveryDiv.classList.add('hidden');
+        rejectionDiv.classList.remove('hidden');
+      } else {
+        deliveryDiv.classList.add('hidden');
+        rejectionDiv.classList.add('hidden');
+      }
+    }
+
+    async function handleOrderSubmit(event) {
+      event.preventDefault();
+      
+      const orderId = document.getElementById('form-order-id').value;
+      const status = document.getElementById('form-order-status').value;
+      const delivered_details = document.getElementById('form-order-delivery').value;
+      const rejection_notes = document.getElementById('form-order-rejection').value;
+
+      try {
+        const { error } = await dbClient
+          .from('orders')
+          .update({
+            status,
+            delivered_details: (status === 'active' || status === 'delivered') ? delivered_details : null,
+            rejection_notes: (status === 'rejected') ? rejection_notes : null
+          })
+          .eq('id', orderId);
+
+        if (error) throw error;
+
+        // Log action
+        try {
+          await dbClient.from('logs').insert({
+            action: 'VERIFY_ORDER',
+            details: `Admin updated order ID ${orderId} status to [${status}]`,
+            performed_by: 'Admin Dashboard'
+          });
+        } catch(e) {}
+
+        showToast('Order details updated successfully!', 'success');
+        closeOrderModal();
+        loadOrders();
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to update order: ' + err.message, 'error');
+      }
+    }
+
+    // =========================================================================
+    // USERS MANAGEMENT
+    // =========================================================================
+    let usersList = [];
+
+    async function loadUsers() {
+      const tbody = document.getElementById('users-table-body');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="px-6 py-12 text-center text-zinc-500">
+            <div class="flex flex-col items-center gap-3">
+              <svg class="animate-spin h-6 w-6 text-brand-red" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              Fetching registered users...
+            </div>
+          </td>
+        </tr>
+      `;
+
+      try {
+        const { data, error } = await dbClient.auth.admin.listUsers();
+        if (error) throw error;
+
+        usersList = data.users || [];
+        renderUsers(usersList);
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to load users: ' + err.message, 'error');
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-6 py-12 text-center text-rose-500">
+              Error fetching users: ${err.message}. Make sure your key is a valid Service Role Key.
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function renderUsers(items) {
+      const tbody = document.getElementById('users-table-body');
+      if (items.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-6 py-12 text-center text-zinc-500">No users found.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = items.map(user => {
+        const emailConfirmed = user.email_confirmed_at 
+          ? '<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Verified</span>'
+          : '<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">Pending</span>';
+        
+        const created = user.created_at ? new Date(user.created_at).toLocaleDateString() : '-';
+        const lastSignIn = user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleString() : 'Never';
+
+        return `
+          <tr class="hover:bg-zinc-900/30 transition-colors">
+            <td class="px-6 py-4 font-semibold text-white">${escapeHtml(user.email)}</td>
+            <td class="px-6 py-4 font-mono text-xs text-zinc-500" title="${user.id}">${user.id}</td>
+            <td class="px-6 py-4">${emailConfirmed}</td>
+            <td class="px-6 py-4 text-xs text-zinc-300">${created}</td>
+            <td class="px-6 py-4 text-xs text-zinc-300">${lastSignIn}</td>
+            <td class="px-6 py-4 text-right">
+              <button 
+                onclick="deleteUser('${user.id}', '${escapeHtml(user.email)}')" 
+                class="p-1.5 hover:bg-rose-500/10 rounded-lg text-zinc-500 hover:text-rose-400 transition-colors cursor-pointer"
+                title="Delete User"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterUsers() {
+      const searchVal = document.getElementById('search-users').value.toLowerCase();
+      const filtered = usersList.filter(user => user.email.toLowerCase().includes(searchVal));
+      renderUsers(filtered);
+    }
+
+    async function deleteUser(userId, email) {
+      if (confirm(`Are you absolutely sure you want to delete user "${email}"? This will delete their account permanently.`)) {
+        try {
+          const { error } = await dbClient.auth.admin.deleteUser(userId);
+          if (error) throw error;
+          showToast(`User ${email} was deleted successfully`, 'success');
+          loadUsers();
+        } catch (err) {
+          console.error(err);
+          showToast('Failed to delete user: ' + err.message, 'error');
+        }
+      }
+    }
+
+    // =========================================================================
+    // LOGS & STATS
+    // =========================================================================
+    async function loadLogsAndStats() {
+      // 1. Fetch counts
+      try {
+        const { count: prodCount } = await dbClient.from('tools').select('*', { count: 'exact', head: true });
+        document.getElementById('stats-products').textContent = prodCount !== null ? prodCount : '0';
+      } catch (e) { document.getElementById('stats-products').textContent = 'Error'; }
+
+      try {
+        const { count: revCount } = await dbClient.from('reviews').select('*', { count: 'exact', head: true }).eq('approved', true);
+        document.getElementById('stats-reviews').textContent = revCount !== null ? revCount : '0';
+      } catch (e) { document.getElementById('stats-reviews').textContent = 'Error'; }
+
+      try {
+        const { count: ordCount } = await dbClient.from('orders').select('*', { count: 'exact', head: true });
+        document.getElementById('stats-orders').textContent = ordCount !== null ? ordCount : '0';
+      } catch (e) { document.getElementById('stats-orders').textContent = 'Error'; }
+
+      try {
+        const { data: usersData, error: usersErr } = await dbClient.auth.admin.listUsers();
+        if (!usersErr && usersData) {
+          document.getElementById('stats-users').textContent = usersData.users.length;
+          
+          // Populate Recent Registrations Timeline
+          const sortedUsers = [...usersData.users].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10);
+          const container = document.getElementById('logs-registrations-container');
+          if (sortedUsers.length === 0) {
+            container.innerHTML = `<div class="text-xs text-zinc-500">No recent signups.</div>`;
+          } else {
+            container.innerHTML = sortedUsers.map(u => {
+              const date = new Date(u.created_at).toLocaleString();
+              return `
+                <div class="p-3 bg-zinc-900/50 border border-zinc-800/80 rounded-xl flex flex-col gap-1">
+                  <div class="flex justify-between items-center">
+                    <span class="text-xs font-semibold text-zinc-200">${escapeHtml(u.email)}</span>
+                    <span class="text-[10px] text-zinc-500">${date}</span>
+                  </div>
+                  <div class="text-[10px] text-zinc-400 font-mono truncate">ID: ${u.id}</div>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+      } catch (e) {
+        document.getElementById('stats-users').textContent = 'Error';
+      }
+
+      // 2. Fetch Database Action Logs
+      const dbLogsContainer = document.getElementById('logs-db-container');
+      dbLogsContainer.innerHTML = `<div class="text-xs text-zinc-500">Checking logs table...</div>`;
+
+      try {
+        const { data: logsData, error: logsErr } = await dbClient.from('logs').select('*').order('created_at', { ascending: false }).limit(10);
+        if (logsErr) throw logsErr;
+
+        if (!logsData || logsData.length === 0) {
+          dbLogsContainer.innerHTML = `<div class="text-xs text-zinc-500">Logs table is empty. Create records to see logs.</div>`;
+        } else {
+          dbLogsContainer.innerHTML = logsData.map(log => {
+            const date = new Date(log.created_at).toLocaleString();
+            return `
+              <div class="p-3 bg-zinc-900/50 border border-zinc-800/80 rounded-xl flex flex-col gap-1">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-semibold text-brand-red">[${escapeHtml(log.action || 'ACTION')}]</span>
+                  <span class="text-[10px] text-zinc-500">${date}</span>
+                </div>
+                <div class="text-xs text-zinc-300">${escapeHtml(log.details || '')}</div>
+                <div class="text-[10px] text-zinc-500 font-mono">By: ${escapeHtml(log.performed_by || 'system')}</div>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        dbLogsContainer.innerHTML = `
+          <div class="space-y-3">
+            <div class="text-xs text-amber-500 font-medium">Custom logs table or columns not fully configured.</div>
+            <div class="text-[11px] text-zinc-400 leading-relaxed">
+              To support naye features (social proof popups, user dashboard uploads, screenshots, and delivery details), run this SQL in your <strong>Supabase SQL Editor</strong>:
+            </div>
+            <pre class="text-[10px] bg-black/60 p-2.5 rounded-lg border border-zinc-800 overflow-x-auto text-zinc-300 font-mono">
+-- 1. Create logs table (if not exists)
+CREATE TABLE IF NOT EXISTS logs (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  action TEXT NOT NULL,
+  details TEXT,
+  performed_by TEXT
+);
+
+-- 2. Add columns to orders table
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS screenshot_url TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivered_details TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_method TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS rejection_notes TEXT;</pre>
+          </div>
+        `;
+      }
+    }
+
+    // =========================================================================
+    // UTILS
+    // =========================================================================
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
