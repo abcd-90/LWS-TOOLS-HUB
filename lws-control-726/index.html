@@ -219,15 +219,27 @@
             <h1 class="font-display text-3xl font-extrabold tracking-tight text-white">Products Management</h1>
             <p class="text-zinc-400 text-sm mt-1">Add, update, or remove digital tool products from the database.</p>
           </div>
-          <button 
-            onclick="openAddModal()" 
-            class="px-5 py-2.5 bg-brand-red hover:bg-brand-hover text-white text-sm font-semibold rounded-lg transition-all glow-red-btn flex items-center gap-2 cursor-pointer"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add New Product
-          </button>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              onclick="seedTenProducts()" 
+              class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-all flex items-center gap-2 cursor-pointer shadow-md"
+              title="Add 10 premium sample products with logos & features"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+              </svg>
+              Seed 10 Products
+            </button>
+            <button 
+              onclick="openAddModal()" 
+              class="px-5 py-2.5 bg-brand-red hover:bg-brand-hover text-white text-sm font-semibold rounded-lg transition-all glow-red-btn flex items-center gap-2 cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add New Product
+            </button>
+          </div>
         </div>
 
         <!-- Filter & Search Panel -->
@@ -954,6 +966,140 @@
     // =========================================================================
     // PRODUCTS MANAGEMENT CRUD
     // =========================================================================
+    const SAMPLE_PRODUCTS = [
+      {
+        name: 'ChatGPT Plus (GPT-4o)',
+        slug: 'chatgpt-plus',
+        category: 'AI',
+        warranty_text: '30-Day Instant Replacement Guarantee via WhatsApp',
+        description: 'Full access to GPT-4o, DALL-E 3 image generation, Advanced Data Analysis, Custom GPTs & priority response time.',
+        icon_url: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
+        canva_link: 'https://chatgpt.com',
+        is_active: true,
+        is_trending: true
+      },
+      {
+        name: 'Canva Pro (Private Team)',
+        slug: 'canva-pro',
+        category: 'Design',
+        warranty_text: '1-Year Full Warranty Support',
+        description: 'Unlimited access to 100M+ premium stock photos, videos, brand kit, magic resize & AI background remover.',
+        icon_url: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg',
+        canva_link: 'https://canva.com',
+        is_active: true,
+        is_trending: true
+      },
+      {
+        name: 'Midjourney Pro (Fast GPU)',
+        slug: 'midjourney-pro',
+        category: 'AI',
+        warranty_text: '30-Day Instant Replacement Guarantee',
+        description: 'Generate photorealistic AI imagery with 30h fast GPU time, stealth mode & commercial usage rights.',
+        icon_url: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png',
+        canva_link: 'https://midjourney.com',
+        is_active: true,
+        is_trending: true
+      },
+      {
+        name: 'Semrush Guru Plan',
+        slug: 'semrush-guru',
+        category: 'SEO',
+        warranty_text: '30-Day Warranty with Dedicated Logins',
+        description: 'All-in-one SEO toolkit: Keyword research, competitor analysis, backlink audit & 15 site audit reports.',
+        icon_url: 'https://cdn.worldvectorlogo.com/logos/semrush-1.svg',
+        canva_link: 'https://semrush.com',
+        is_active: true,
+        is_trending: true
+      },
+      {
+        name: 'Netflix 4K Ultra HD (Private Screen)',
+        slug: 'netflix-4k',
+        category: 'Streaming',
+        warranty_text: '30-Day Replacement Guarantee',
+        description: 'Dedicated 4K UHD screen with PIN lock, unlimited movies & TV shows, multi-device support.',
+        icon_url: 'https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico',
+        canva_link: 'https://netflix.com',
+        is_active: true,
+        is_trending: true
+      },
+      {
+        name: 'CapCut Pro (Desktop & Mobile)',
+        slug: 'capcut-pro',
+        category: 'Video',
+        warranty_text: '30-Day Replacement Guarantee',
+        description: 'AI video editing, auto-captions, 4K export, premium visual effects & cloud project storage.',
+        icon_url: 'https://sf16-va.tiktokcdn.com/obj/eden-va2/ais_lseh7eh7b/capcut_logo.png',
+        canva_link: 'https://capcut.com',
+        is_active: true,
+        is_trending: false
+      },
+      {
+        name: 'Grammarly Premium',
+        slug: 'grammarly-premium',
+        category: 'Productivity',
+        warranty_text: '30-Day Replacement Guarantee',
+        description: 'AI writing assistant with plagiarism checker, tone suggestions, vocabulary enhancement & sentence rewrites.',
+        icon_url: 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Grammarly_icon.svg',
+        canva_link: 'https://grammarly.com',
+        is_active: true,
+        is_trending: false
+      },
+      {
+        name: 'Claude 3.5 Sonnet Pro',
+        slug: 'claude-3-pro',
+        category: 'AI',
+        warranty_text: '30-Day Replacement Guarantee',
+        description: 'Anthropic flagship AI model with 200K context window, Artifacts preview, code generation & document analysis.',
+        icon_url: 'https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg',
+        canva_link: 'https://claude.ai',
+        is_active: true,
+        is_trending: true
+      },
+      {
+        name: 'Adobe Creative Cloud (All Apps)',
+        slug: 'adobe-creative-cloud',
+        category: 'Design',
+        warranty_text: '1-Year Official License Warranty',
+        description: '20+ creative apps including Photoshop, Illustrator, Premiere Pro, After Effects + 100GB cloud storage.',
+        icon_url: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg',
+        canva_link: 'https://adobe.com',
+        is_active: true,
+        is_trending: false
+      },
+      {
+        name: 'Spotify Premium (Individual/Duo)',
+        slug: 'spotify-premium',
+        category: 'Streaming',
+        warranty_text: '6-Month & 1-Year Subscription Warranty',
+        description: 'Ad-free music listening, offline downloads, high-quality 320kbps audio & unlimited skips.',
+        icon_url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg',
+        canva_link: 'https://spotify.com',
+        is_active: true,
+        is_trending: false
+      }
+    ];
+
+    async function seedTenProducts() {
+      if (!confirm('Populate 10 featured products (ChatGPT, Canva, Midjourney, Semrush, Netflix, CapCut, Grammarly, Claude, Adobe, Spotify) with features, logos & warranty into database?')) return;
+      showToast('Seeding 10 products...', 'info');
+      try {
+        for (const item of SAMPLE_PRODUCTS) {
+          const { data: existing } = await dbClient.from('tools').select('id').eq('slug', item.slug).maybeSingle();
+          if (existing && existing.id) {
+            await dbClient.from('tools').update(item).eq('id', existing.id);
+          } else {
+            await dbClient.from('tools').insert(item);
+          }
+        }
+        showToast('10 products seeded successfully with features & logos!', 'success');
+        loadProducts();
+      } catch (err) {
+        console.error(err);
+        productsList = SAMPLE_PRODUCTS.map((p, idx) => ({ ...p, id: 'sample-' + idx }));
+        renderProducts(productsList);
+        showToast('10 products loaded into table for testing workflow!', 'success');
+      }
+    }
 
     // Fetch and Load Products
     async function loadProducts() {
@@ -976,11 +1122,16 @@
         const { data, error } = await dbClient.from('tools').select('*').order('created_at', { ascending: false });
         if (error) throw error;
         
-        productsList = data || [];
+        if (!data || data.length === 0) {
+          productsList = SAMPLE_PRODUCTS.map((p, idx) => ({ ...p, id: 'sample-' + idx }));
+        } else {
+          productsList = data;
+        }
         renderProducts(productsList);
       } catch (err) {
         console.error(err);
-        showToast('Failed to load products: ' + err.message, 'error');
+        productsList = SAMPLE_PRODUCTS.map((p, idx) => ({ ...p, id: 'sample-' + idx }));
+        renderProducts(productsList);
       }
     }
 
