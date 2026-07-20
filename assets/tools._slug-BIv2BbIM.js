@@ -22,6 +22,11 @@ export const FEATURED_TOOLS_DATA = [
     canva_link: "https://chatgpt.com",
     is_active: true,
     is_trending: true,
+    gallery: [
+      "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+      "https://images.unsplash.com/photo-1677442136019-21780efad99a?w=400&q=80",
+      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&q=80"
+    ],
     features: [
       "Access to GPT-4o & GPT-4 Turbo models",
       "DALL-E 3 High-resolution AI Image Generation",
@@ -293,6 +298,7 @@ function ToolDetailsComponent() {
   
   const [tool, setTool] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+  const [activeImgIndex, setActiveImgIndex] = React.useState(0);
   const [openFaq, setOpenFaq] = React.useState(0);
   const { addItem, items } = useCart();
 
@@ -323,7 +329,8 @@ function ToolDetailsComponent() {
           savings: defaultMatch.savings,
           delivery_time: matchedTool.delivery_time || defaultMatch.delivery_time,
           features: matchedTool.features || defaultMatch.features,
-          faqs: matchedTool.faqs || defaultMatch.faqs
+          faqs: matchedTool.faqs || defaultMatch.faqs,
+          gallery: defaultMatch.gallery
         });
       } else {
         setTool(defaultMatch);
@@ -367,6 +374,14 @@ function ToolDetailsComponent() {
 
   const inCart = items.some(item => item.toolId === tool.id || item.toolName === tool.name);
   const fallbackIcon = `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(tool.name)}&backgroundType=gradientLinear&backgroundColor=1e9bff,7ee8fa`;
+  const gallery = tool.gallery && tool.gallery.length > 0 ? tool.gallery : [tool.icon_url || fallbackIcon];
+
+  const handlePrevImg = () => {
+    setActiveImgIndex(prev => (prev === 0 ? gallery.length - 1 : prev - 1));
+  };
+  const handleNextImg = () => {
+    setActiveImgIndex(prev => (prev === gallery.length - 1 ? 0 : prev + 1));
+  };
 
   return (0, p.jsxs)("div", {
     className: "container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-6xl space-y-6 text-slate-800",
@@ -393,59 +408,73 @@ function ToolDetailsComponent() {
         })
       }),
 
-      // DARAZ / AMAZON STYLE E-COMMERCE HERO CARD
+      // DARAZ / AMAZON STYLE HERO CARD
       (0, p.jsx)("div", {
         className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm",
         children: (0, p.jsxs)("div", {
           className: "grid grid-cols-1 md:grid-cols-12 gap-8 items-start",
           children: [
 
-            // LEFT COLUMN: Product Image & Gallery (md:col-span-5 lg:col-span-4)
+            // LEFT COLUMN: Cute Compact Image Box (240px) with < Prev & Next > Controls
             (0, p.jsxs)("div", {
               className: "md:col-span-5 lg:col-span-4 space-y-4 flex flex-col items-center md:items-start shrink-0",
               children: [
-                (0, p.jsx)("div", {
-                  className: "w-full max-w-[340px] aspect-square rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-6 flex items-center justify-center overflow-hidden shadow-xs shrink-0 mx-auto md:mx-0",
-                  children: (0, p.jsx)("img", {
-                    src: tool.icon_url || fallbackIcon,
-                    alt: tool.name,
-                    className: "w-full h-full object-contain filter drop-shadow-md",
-                    onError: e => { e.currentTarget.src = fallbackIcon; }
-                  })
+                (0, p.jsxs)("div", {
+                  className: "relative w-[220px] h-[220px] sm:w-[250px] sm:h-[250px] rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-4 flex items-center justify-center overflow-hidden shadow-xs shrink-0 mx-auto md:mx-0 group",
+                  children: [
+                    (0, p.jsx)("img", {
+                      src: gallery[activeImgIndex] || fallbackIcon,
+                      alt: tool.name,
+                      className: "w-full h-full object-contain filter drop-shadow-md transition-all duration-300",
+                      onError: e => { e.currentTarget.src = fallbackIcon; }
+                    }),
+
+                    // Left & Right Arrow Slider Icons (< >)
+                    gallery.length > 1 && (0, p.jsxs)(p.Fragment, {
+                      children: [
+                        (0, p.jsx)("button", {
+                          onClick: handlePrevImg,
+                          className: "absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow-md text-slate-700 flex items-center justify-center font-bold text-sm hover:bg-white transition-all cursor-pointer opacity-80 hover:opacity-100 z-10",
+                          title: "Previous Image",
+                          children: "‹"
+                        }),
+                        (0, p.jsx)("button", {
+                          onClick: handleNextImg,
+                          className: "absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow-md text-slate-700 flex items-center justify-center font-bold text-sm hover:bg-white transition-all cursor-pointer opacity-80 hover:opacity-100 z-10",
+                          title: "Next Image",
+                          children: "›"
+                        })
+                      ]
+                    })
+                  ]
                 }),
 
-                // Gallery Thumbnails
+                // Interactive Thumbnails Row Below Image
                 (0, p.jsxs)("div", {
-                  className: "flex items-center gap-2.5 justify-center md:justify-start w-full overflow-x-auto py-1",
+                  className: "flex items-center gap-2 justify-center md:justify-start w-full overflow-x-auto py-1",
                   children: [
-                    (0, p.jsx)("div", {
-                      className: "w-12 h-12 rounded-xl border-2 border-red-500 bg-white p-1.5 flex items-center justify-center cursor-pointer shadow-xs shrink-0",
-                      children: (0, p.jsx)("img", { src: tool.icon_url || fallbackIcon, alt: "thumb1", className: "w-full h-full object-contain" })
-                    }),
-                    (0, p.jsx)("div", {
-                      className: "w-12 h-12 rounded-xl border border-slate-200 bg-slate-900 text-white font-bold text-[11px] flex items-center justify-center cursor-pointer shrink-0",
-                      children: "UI"
-                    }),
-                    (0, p.jsx)("div", {
-                      className: "w-12 h-12 rounded-xl border border-slate-200 bg-slate-100 text-slate-600 font-bold text-[11px] flex items-center justify-center cursor-pointer shrink-0",
-                      children: "Light"
-                    }),
-                    (0, p.jsx)("div", {
-                      className: "w-12 h-12 rounded-xl border border-slate-200 bg-emerald-950 text-emerald-400 font-bold text-[11px] flex items-center justify-center cursor-pointer shrink-0",
-                      children: "Logo"
-                    }),
-                    (0, p.jsx)("div", {
-                      className: "w-12 h-12 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold text-xs flex items-center justify-center cursor-pointer shrink-0",
-                      children: "+2"
+                    gallery.slice(0, 4).map((imgUrl, idx) => (
+                      (0, p.jsx)("button", {
+                        key: idx,
+                        onClick: () => setActiveImgIndex(idx),
+                        className: `w-11 h-11 rounded-xl border-2 p-1 bg-white flex items-center justify-center cursor-pointer shadow-xs shrink-0 transition-all ${
+                          activeImgIndex === idx ? 'border-red-500 ring-2 ring-red-500/20' : 'border-slate-200 hover:border-slate-300 opacity-70'
+                        }`,
+                        children: (0, p.jsx)("img", { src: imgUrl, alt: `thumb_${idx}`, className: "w-full h-full object-contain" })
+                      })
+                    )),
+                    gallery.length > 4 && (0, p.jsxs)("div", {
+                      className: "w-11 h-11 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold text-xs flex items-center justify-center shrink-0",
+                      children: [`+${gallery.length - 4}`]
                     })
                   ]
                 })
               ]
             }),
 
-            // RIGHT COLUMN: Product Details & CTAs (md:col-span-7 lg:col-span-8)
+            // RIGHT COLUMN: Product Details & Unmerged Crisp Action Buttons (md:col-span-7 lg:col-span-8)
             (0, p.jsxs)("div", {
-              className: "md:col-span-7 lg:col-span-8 space-y-4",
+              className: "md:col-span-7 lg:col-span-8 space-y-4 min-w-0 flex-1",
               children: [
                 // Badges
                 (0, p.jsxs)("div", {
@@ -468,7 +497,7 @@ function ToolDetailsComponent() {
 
                 // Title
                 (0, p.jsx)("h1", {
-                  className: "text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug",
+                  className: "text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug break-words",
                   children: tool.name
                 }),
 
@@ -499,7 +528,7 @@ function ToolDetailsComponent() {
 
                 // Trust Bullets
                 (0, p.jsxs)("div", {
-                  className: "space-y-2 pt-2 text-xs sm:text-sm text-slate-600 font-medium border-t border-slate-100",
+                  className: "space-y-2 pt-3 text-xs sm:text-sm text-slate-600 font-medium border-t border-slate-100",
                   children: [
                     (0, p.jsxs)("div", {
                       className: "flex items-center gap-2",
@@ -518,7 +547,7 @@ function ToolDetailsComponent() {
                   ]
                 }),
 
-                // Action CTA Buttons Row
+                // Clean Unmerged Crisp Action CTA Buttons
                 (0, p.jsxs)("div", {
                   className: "flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-slate-100 max-w-md",
                   children: [
@@ -644,7 +673,7 @@ function ToolDetailsComponent() {
             ]
           }),
 
-          // RIGHT CARD: Frequently Asked Questions (Interactive Accordion)
+          // RIGHT CARD: Frequently Asked Questions (Interactive Accordion — Click Question to reveal answer)
           (0, p.jsxs)("div", {
             className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs",
             children: [
