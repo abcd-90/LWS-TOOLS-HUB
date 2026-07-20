@@ -293,6 +293,7 @@ function ToolDetailsComponent() {
   
   const [tool, setTool] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+  const [openFaq, setOpenFaq] = React.useState(0); // Default first FAQ open
   const { addItem, items } = useCart();
 
   React.useEffect(() => {
@@ -368,10 +369,10 @@ function ToolDetailsComponent() {
   const fallbackIcon = `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(tool.name)}&backgroundType=gradientLinear&backgroundColor=1e9bff,7ee8fa`;
 
   return (0, p.jsxs)("div", {
-    className: "container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl space-y-6 text-slate-800",
+    className: "container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-6xl space-y-6 text-slate-800",
     children: [
 
-      // Top Breadcrumb Link
+      // Top Breadcrumb Link (Exact Daraz/Amazon placement)
       (0, p.jsx)(n, {
         to: "/tools",
         className: "inline-flex items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700 transition-colors cursor-pointer",
@@ -392,20 +393,20 @@ function ToolDetailsComponent() {
         })
       }),
 
-      // HERO PRODUCT CARD (Strict 3-Column Layout on md/lg/xl, Image constrained)
+      // DARAZ / AMAZON STYLE E-COMMERCE HERO CARD (Image Left, Details Right)
       (0, p.jsx)("div", {
-        className: "bg-white border border-slate-200/80 rounded-3xl p-5 sm:p-6 lg:p-8 shadow-sm",
+        className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm",
         children: (0, p.jsxs)("div", {
-          className: "grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-start",
+          className: "grid grid-cols-1 md:grid-cols-12 gap-8 items-start",
           children: [
 
-            // LEFT COLUMN: Product Image & Gallery (md:col-span-4 lg:col-span-3)
+            // LEFT COLUMN: Product Image & Gallery (md:col-span-5 lg:col-span-4)
             (0, p.jsxs)("div", {
-              className: "md:col-span-4 lg:col-span-3 space-y-3 flex flex-col items-center md:items-start shrink-0",
+              className: "md:col-span-5 lg:col-span-4 space-y-4 flex flex-col items-center md:items-start shrink-0",
               children: [
-                // Fixed Dimensions Image Box (Will NEVER blow up to full width on laptop)
+                // Product Image Box (Daraz Left Alignment & Ratio)
                 (0, p.jsx)("div", {
-                  className: "w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] lg:w-[260px] lg:h-[260px] rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-4 flex items-center justify-center overflow-hidden shadow-xs shrink-0 mx-auto md:mx-0",
+                  className: "w-full max-w-[340px] aspect-square rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-6 flex items-center justify-center overflow-hidden shadow-xs shrink-0 mx-auto md:mx-0",
                   children: (0, p.jsx)("img", {
                     src: tool.icon_url || fallbackIcon,
                     alt: tool.name,
@@ -414,28 +415,28 @@ function ToolDetailsComponent() {
                   })
                 }),
 
-                // Thumbnails Row Below Image
+                // Gallery Thumbnails Below Image
                 (0, p.jsxs)("div", {
-                  className: "flex items-center gap-2 justify-center md:justify-start w-full overflow-x-auto py-1",
+                  className: "flex items-center gap-2.5 justify-center md:justify-start w-full overflow-x-auto py-1",
                   children: [
                     (0, p.jsx)("div", {
-                      className: "w-10 h-10 rounded-lg border-2 border-red-500 bg-white p-1 flex items-center justify-center cursor-pointer shadow-xs shrink-0",
+                      className: "w-12 h-12 rounded-xl border-2 border-red-500 bg-white p-1.5 flex items-center justify-center cursor-pointer shadow-xs shrink-0",
                       children: (0, p.jsx)("img", { src: tool.icon_url || fallbackIcon, alt: "thumb1", className: "w-full h-full object-contain" })
                     }),
                     (0, p.jsx)("div", {
-                      className: "w-10 h-10 rounded-lg border border-slate-200 bg-slate-900 p-1 flex items-center justify-center cursor-pointer text-[10px] text-white font-bold shrink-0",
+                      className: "w-12 h-12 rounded-xl border border-slate-200 bg-slate-900 text-white font-bold text-[11px] flex items-center justify-center cursor-pointer shrink-0",
                       children: "UI"
                     }),
                     (0, p.jsx)("div", {
-                      className: "w-10 h-10 rounded-lg border border-slate-200 bg-slate-100 p-1 flex items-center justify-center cursor-pointer text-[10px] text-slate-600 font-bold shrink-0",
+                      className: "w-12 h-12 rounded-xl border border-slate-200 bg-slate-100 text-slate-600 font-bold text-[11px] flex items-center justify-center cursor-pointer shrink-0",
                       children: "Light"
                     }),
                     (0, p.jsx)("div", {
-                      className: "w-10 h-10 rounded-lg border border-slate-200 bg-emerald-950 p-1 flex items-center justify-center cursor-pointer text-[10px] text-emerald-400 font-bold shrink-0",
+                      className: "w-12 h-12 rounded-xl border border-slate-200 bg-emerald-950 text-emerald-400 font-bold text-[11px] flex items-center justify-center cursor-pointer shrink-0",
                       children: "Logo"
                     }),
                     (0, p.jsx)("div", {
-                      className: "w-10 h-10 rounded-lg border border-slate-200 bg-slate-50 p-1 flex items-center justify-center cursor-pointer text-[10px] text-slate-500 font-bold shrink-0",
+                      className: "w-12 h-12 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold text-xs flex items-center justify-center cursor-pointer shrink-0",
                       children: "+2"
                     })
                   ]
@@ -443,24 +444,24 @@ function ToolDetailsComponent() {
               ]
             }),
 
-            // CENTER COLUMN: Product Details (md:col-span-5 lg:col-span-6)
+            // RIGHT COLUMN: Product Details & CTAs (md:col-span-7 lg:col-span-8)
             (0, p.jsxs)("div", {
-              className: "md:col-span-5 lg:col-span-6 space-y-3",
+              className: "md:col-span-7 lg:col-span-8 space-y-4",
               children: [
-                // Badges
+                // Category & Status Badges
                 (0, p.jsxs)("div", {
                   className: "flex flex-wrap items-center gap-2",
                   children: [
                     (0, p.jsx)("span", {
-                      className: "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-600 border border-rose-200/60",
+                      className: "px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-600 border border-rose-200/60",
                       children: tool.category
                     }),
                     tool.is_trending && (0, p.jsx)("span", {
-                      className: "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-600 border border-rose-200/60",
+                      className: "px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-600 border border-rose-200/60",
                       children: "🔥 Hot / Trending"
                     }),
                     (0, p.jsx)("span", {
-                      className: "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-600 border border-rose-200/60",
+                      className: "px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-600 border border-rose-200/60",
                       children: "⚡ Verified Instant"
                     })
                   ]
@@ -468,24 +469,24 @@ function ToolDetailsComponent() {
 
                 // Title
                 (0, p.jsx)("h1", {
-                  className: "text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug",
+                  className: "text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug",
                   children: tool.name
                 }),
 
                 // Price Row
                 (0, p.jsxs)("div", {
-                  className: "flex flex-wrap items-baseline gap-2.5 pt-1",
+                  className: "flex flex-wrap items-baseline gap-3 py-1",
                   children: [
                     (0, p.jsx)("span", {
-                      className: "text-2xl sm:text-3xl font-extrabold text-red-600 font-display",
+                      className: "text-3xl sm:text-4xl font-extrabold text-red-600 font-display",
                       children: tool.price || "PKR 1,499"
                     }),
                     tool.original_price && (0, p.jsx)("span", {
-                      className: "text-sm sm:text-base text-slate-400 line-through font-medium",
+                      className: "text-base sm:text-lg text-slate-400 line-through font-medium",
                       children: tool.original_price
                     }),
                     tool.savings && (0, p.jsx)("span", {
-                      className: "px-2 py-0.5 rounded-md text-xs font-bold text-red-600 bg-rose-100 border border-rose-200/60 whitespace-nowrap",
+                      className: "px-2.5 py-1 rounded-md text-xs font-bold text-red-600 bg-rose-100 border border-rose-200/60 whitespace-nowrap",
                       children: tool.savings
                     })
                   ]
@@ -493,13 +494,13 @@ function ToolDetailsComponent() {
 
                 // Description
                 (0, p.jsx)("p", {
-                  className: "text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl",
+                  className: "text-xs sm:text-sm text-slate-600 leading-relaxed pt-1 max-w-2xl",
                   children: tool.description
                 }),
 
-                // Trust Bullets Below Description
+                // Trust Bullets
                 (0, p.jsxs)("div", {
-                  className: "space-y-1.5 pt-2 text-xs sm:text-sm text-slate-600 font-medium border-t border-slate-100",
+                  className: "space-y-2 pt-2 text-xs sm:text-sm text-slate-600 font-medium border-t border-slate-100",
                   children: [
                     (0, p.jsxs)("div", {
                       className: "flex items-center gap-2",
@@ -516,42 +517,42 @@ function ToolDetailsComponent() {
                       ]
                     })
                   ]
-                })
-              ]
-            }),
-
-            // RIGHT COLUMN: Sticky Purchase Card (md:col-span-3 lg:col-span-3)
-            (0, p.jsxs)("div", {
-              className: "md:col-span-3 lg:col-span-3 w-full bg-slate-50/50 rounded-2xl p-4 border border-slate-200/60 space-y-2.5 sticky top-24 shadow-xs",
-              children: [
-                (0, p.jsx)("button", {
-                  onClick: e => {
-                    e.preventDefault();
-                    if (!inCart) {
-                      addItem({
-                        toolId: tool.id,
-                        toolName: tool.name,
-                        planName: "Standard",
-                        iconUrl: tool.icon_url || ""
-                      });
-                      toast.success(`${tool.name} added to cart`);
-                    }
-                  },
-                  disabled: inCart,
-                  className: `w-full h-11 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    inCart
-                      ? "bg-slate-200 text-slate-600 cursor-not-allowed opacity-80"
-                      : "bg-red-600 hover:bg-red-700 text-white shadow-sm shadow-red-600/20 active:scale-[0.99]"
-                  }`,
-                  children: inCart ? "In Cart 🛒" : "Add to Cart 🛒"
                 }),
 
-                (0, p.jsx)("a", {
-                  href: `https://wa.me/923106126454?text=Hi%20Techno%20Tools!%20I%20want%20to%20order%20${encodeURIComponent(tool.name)}%20for%20${encodeURIComponent(tool.price || "PKR 1,499")}`,
-                  target: "_blank",
-                  rel: "noopener noreferrer",
-                  className: "w-full h-11 rounded-xl text-xs sm:text-sm font-bold border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs",
-                  children: "💬 Chat with Support"
+                // Clean Action CTA Buttons Row (Full Crisp Buttons — No Merge Artifacts)
+                (0, p.jsxs)("div", {
+                  className: "flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-slate-100 max-w-md",
+                  children: [
+                    (0, p.jsx)("button", {
+                      onClick: e => {
+                        e.preventDefault();
+                        if (!inCart) {
+                          addItem({
+                            toolId: tool.id,
+                            toolName: tool.name,
+                            planName: "Standard",
+                            iconUrl: tool.icon_url || ""
+                          });
+                          toast.success(`${tool.name} added to cart`);
+                        }
+                      },
+                      disabled: inCart,
+                      className: `w-full sm:flex-1 h-12 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        inCart
+                          ? "bg-slate-200 text-slate-600 cursor-not-allowed opacity-80"
+                          : "bg-red-600 hover:bg-red-700 text-white shadow-md shadow-red-600/20 active:scale-[0.99]"
+                      }`,
+                      children: inCart ? "In Cart 🛒" : "Add to Cart 🛒"
+                    }),
+
+                    (0, p.jsx)("a", {
+                      href: `https://wa.me/923106126454?text=Hi%20Techno%20Tools!%20I%20want%20to%20order%20${encodeURIComponent(tool.name)}%20for%20${encodeURIComponent(tool.price || "PKR 1,499")}`,
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                      className: "w-full sm:flex-1 h-12 rounded-xl text-sm font-bold border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs",
+                      children: "💬 Chat with Support"
+                    })
+                  ]
                 })
               ]
             })
@@ -580,7 +581,7 @@ function ToolDetailsComponent() {
             ]
           }),
 
-          // 3 Process Cards Row
+          // 3 Process Step Cards
           (0, p.jsxs)("div", {
             className: "grid grid-cols-1 md:grid-cols-3 gap-4 items-center",
             children: [
@@ -615,7 +616,7 @@ function ToolDetailsComponent() {
         ]
       }),
 
-      // SECTION 3: FEATURES & FAQS GRID
+      // SECTION 3: FEATURES & INTERACTIVE FAQS (ACCORDION TOGGLE)
       (0, p.jsxs)("div", {
         className: "grid grid-cols-1 lg:grid-cols-2 gap-6",
         children: [
@@ -644,7 +645,7 @@ function ToolDetailsComponent() {
             ]
           }),
 
-          // RIGHT CARD: FAQs
+          // RIGHT CARD: Frequently Asked Questions (Interactive Accordion — Answer reveals on click)
           (0, p.jsxs)("div", {
             className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs",
             children: [
@@ -654,19 +655,27 @@ function ToolDetailsComponent() {
               }),
               (0, p.jsx)("div", {
                 className: "space-y-3",
-                children: (tool.faqs || []).map((faq, idx) => (
-                  (0, p.jsxs)("div", {
+                children: (tool.faqs || []).map((faq, idx) => {
+                  const isOpen = openFaq === idx;
+                  return (0, p.jsxs)("div", {
                     key: idx,
-                    className: "p-4 sm:p-5 rounded-2xl bg-slate-50/50 border border-slate-200/60 space-y-1.5",
+                    className: "border border-slate-200/80 rounded-2xl bg-slate-50/50 overflow-hidden transition-all shadow-xs",
                     children: [
-                      (0, p.jsxs)("h4", { className: "text-xs sm:text-sm font-semibold text-slate-900 flex items-center justify-between gap-2", children: [
-                        (0, p.jsxs)("span", { className: "flex items-center gap-2", children: ["❓ ", faq.q] }),
-                        (0, p.jsx)("span", { className: "text-slate-400 font-bold text-xs shrink-0", children: "v" })
-                      ] }),
-                      (0, p.jsx)("p", { className: "text-xs text-slate-500 leading-relaxed pl-6", children: faq.a })
+                      (0, p.jsxs)("button", {
+                        onClick: () => setOpenFaq(isOpen ? null : idx),
+                        className: "w-full p-4 text-left font-semibold text-xs sm:text-sm text-slate-900 flex items-center justify-between gap-3 hover:bg-slate-100/60 cursor-pointer transition-colors",
+                        children: [
+                          (0, p.jsxs)("span", { className: "flex items-center gap-2", children: ["❓ ", faq.q] }),
+                          (0, p.jsx)("span", { className: `text-slate-400 font-bold text-xs shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-red-600' : ''}`, children: "▼" })
+                        ]
+                      }),
+                      isOpen && (0, p.jsx)("div", {
+                        className: "px-4 pb-4 text-xs text-slate-600 leading-relaxed border-t border-slate-100 pt-3 bg-white",
+                        children: faq.a
+                      })
                     ]
-                  })
-                ))
+                  });
+                })
               })
             ]
           })
