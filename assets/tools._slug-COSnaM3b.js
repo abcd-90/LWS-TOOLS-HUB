@@ -338,7 +338,7 @@ function ToolDetailsComponent() {
       children: (0, p.jsxs)("div", {
         className: "flex flex-col items-center gap-3 text-muted-foreground",
         children: [
-          (0, p.jsx)("div", { className: "h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" }),
+          (0, p.jsx)("div", { className: "h-8 w-8 animate-spin rounded-full border-4 border-red-600 border-t-transparent" }),
           (0, p.jsx)("span", { children: "Loading tool details..." })
         ]
       })
@@ -351,11 +351,11 @@ function ToolDetailsComponent() {
       children: (0, p.jsxs)("div", {
         className: "max-w-md mx-auto space-y-4",
         children: [
-          (0, p.jsx)("h2", { className: "text-2xl font-bold font-display text-destructive", children: "Tool Not Found" }),
+          (0, p.jsx)("h2", { className: "text-2xl font-bold text-red-600", children: "Tool Not Found" }),
           (0, p.jsx)(n, {
             to: "/tools",
             children: (0, p.jsx)("button", {
-              className: "inline-flex items-center justify-center rounded-lg text-sm font-semibold bg-primary text-primary-foreground h-10 px-6 cursor-pointer",
+              className: "inline-flex items-center justify-center rounded-lg text-sm font-semibold bg-red-600 text-white h-10 px-6 cursor-pointer",
               children: "Back to Catalog"
             })
           })
@@ -368,15 +368,15 @@ function ToolDetailsComponent() {
   const fallbackIcon = `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(tool.name)}&backgroundType=gradientLinear&backgroundColor=1e9bff,7ee8fa`;
 
   return (0, p.jsxs)("div", {
-    className: "container mx-auto px-4 py-6 md:py-10 max-w-4xl space-y-6 md:space-y-8",
+    className: "container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl space-y-6 text-slate-800",
     children: [
 
-      // Top Back Button
+      // Top Breadcrumb Link (Exact match to reference image)
       (0, p.jsx)(n, {
         to: "/tools",
-        className: "inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors",
+        className: "inline-flex items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700 transition-colors cursor-pointer",
         children: (0, p.jsxs)("span", {
-          className: "flex items-center gap-1 cursor-pointer font-medium",
+          className: "flex items-center gap-1.5",
           children: [
             (0, p.jsx)("svg", {
               xmlns: "http://www.w3.org/2000/svg",
@@ -392,177 +392,225 @@ function ToolDetailsComponent() {
         })
       }),
 
-      // Step 2 — Main Tool Info Banner (Clean Card Layout with Perfect Alignments)
-      (0, p.jsxs)("div", {
-        className: "bg-card border border-border/60 rounded-3xl p-5 sm:p-8 shadow-card flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8",
-        children: [
+      // HERO PRODUCT CARD (Exact match to reference image e-commerce layout)
+      (0, p.jsx)("div", {
+        className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm",
+        children: (0, p.jsxs)("div", {
+          className: "grid grid-cols-1 lg:grid-cols-12 gap-8 items-start",
+          children: [
 
-          // Logo Image Container (Clean & Centered)
-          (0, p.jsx)("div", {
-            className: "w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/30 border border-border/60 shadow-card flex items-center justify-center p-4 overflow-hidden shrink-0",
-            children: (0, p.jsx)("img", {
-              src: tool.icon_url || fallbackIcon,
-              alt: tool.name,
-              className: "w-full h-full object-contain filter drop-shadow-md",
-              onError: e => { e.currentTarget.src = fallbackIcon; }
+            // LEFT COLUMN: Main Image (320-380px) & Gallery Thumbnails (lg:col-span-4)
+            (0, p.jsxs)("div", {
+              className: "lg:col-span-4 space-y-4 flex flex-col items-center lg:items-start",
+              children: [
+                // Main Product Image Card
+                (0, p.jsx)("div", {
+                  className: "w-full max-w-[360px] aspect-square rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-6 flex items-center justify-center overflow-hidden shadow-xs shrink-0",
+                  children: (0, p.jsx)("img", {
+                    src: tool.icon_url || fallbackIcon,
+                    alt: tool.name,
+                    className: "w-full h-full object-contain filter drop-shadow-md",
+                    onError: e => { e.currentTarget.src = fallbackIcon; }
+                  })
+                }),
+
+                // Thumbnails Row Below Image
+                (0, p.jsxs)("div", {
+                  className: "flex items-center gap-2.5 justify-center lg:justify-start w-full overflow-x-auto py-1",
+                  children: [
+                    (0, p.jsx)("div", {
+                      className: "w-14 h-14 rounded-xl border-2 border-red-500 bg-white p-2 flex items-center justify-center cursor-pointer shadow-xs shrink-0",
+                      children: (0, p.jsx)("img", { src: tool.icon_url || fallbackIcon, alt: "thumb1", className: "w-full h-full object-contain" })
+                    }),
+                    (0, p.jsx)("div", {
+                      className: "w-14 h-14 rounded-xl border border-slate-200 bg-slate-900 p-2 flex items-center justify-center cursor-pointer text-[11px] text-white font-bold shrink-0",
+                      children: "UI"
+                    }),
+                    (0, p.jsx)("div", {
+                      className: "w-14 h-14 rounded-xl border border-slate-200 bg-slate-100 p-2 flex items-center justify-center cursor-pointer text-[11px] text-slate-600 font-bold shrink-0",
+                      children: "Light"
+                    }),
+                    (0, p.jsx)("div", {
+                      className: "w-14 h-14 rounded-xl border border-slate-200 bg-emerald-950 p-2 flex items-center justify-center cursor-pointer text-[11px] text-emerald-400 font-bold shrink-0",
+                      children: "Logo"
+                    }),
+                    (0, p.jsx)("div", {
+                      className: "w-14 h-14 rounded-xl border border-slate-200 bg-slate-50 p-2 flex items-center justify-center cursor-pointer text-xs text-slate-500 font-bold shrink-0",
+                      children: "+2"
+                    })
+                  ]
+                })
+              ]
+            }),
+
+            // CENTER COLUMN: Product Details (Title, Badges, Price, Trust bullets) (lg:col-span-5)
+            (0, p.jsxs)("div", {
+              className: "lg:col-span-5 space-y-4",
+              children: [
+                // Category & Status Badges
+                (0, p.jsxs)("div", {
+                  className: "flex flex-wrap items-center gap-2",
+                  children: [
+                    (0, p.jsx)("span", {
+                      className: "px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-600 border border-rose-200/60",
+                      children: tool.category
+                    }),
+                    tool.is_trending && (0, p.jsx)("span", {
+                      className: "px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-600 border border-rose-200/60",
+                      children: "🔥 Hot / Trending"
+                    }),
+                    (0, p.jsx)("span", {
+                      className: "px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-600 border border-rose-200/60",
+                      children: "⚡ Verified Instant"
+                    })
+                  ]
+                }),
+
+                // Title
+                (0, p.jsx)("h1", {
+                  className: "text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug",
+                  children: tool.name
+                }),
+
+                // Price Row (Prominent Price, Original Price, Discount Badge)
+                (0, p.jsxs)("div", {
+                  className: "flex flex-wrap items-baseline gap-3 pt-1",
+                  children: [
+                    (0, p.jsx)("span", {
+                      className: "text-3xl sm:text-4xl font-extrabold text-red-600 font-display",
+                      children: tool.price || "PKR 1,499"
+                    }),
+                    tool.original_price && (0, p.jsx)("span", {
+                      className: "text-base sm:text-lg text-slate-400 line-through font-medium",
+                      children: tool.original_price
+                    }),
+                    tool.savings && (0, p.jsx)("span", {
+                      className: "px-2.5 py-0.5 rounded-md text-xs font-bold text-red-600 bg-rose-100 border border-rose-200/60 whitespace-nowrap",
+                      children: tool.savings
+                    })
+                  ]
+                }),
+
+                // Description
+                (0, p.jsx)("p", {
+                  className: "text-xs sm:text-sm text-slate-600 leading-relaxed pt-1 max-w-xl",
+                  children: tool.description
+                }),
+
+                // Trust Badges Below Description
+                (0, p.jsxs)("div", {
+                  className: "space-y-2 pt-2 text-xs sm:text-sm text-slate-600 font-medium border-t border-slate-100 pt-3",
+                  children: [
+                    (0, p.jsxs)("div", {
+                      className: "flex items-center gap-2",
+                      children: [
+                        (0, p.jsx)("span", { className: "text-red-500 font-bold", children: "🛡️" }),
+                        (0, p.jsx)("span", { children: tool.warranty_text || "30-Day Replacement Guarantee via WhatsApp" })
+                      ]
+                    }),
+                    (0, p.jsxs)("div", {
+                      className: "flex items-center gap-2",
+                      children: [
+                        (0, p.jsx)("span", { className: "text-amber-500 font-bold", children: "⚡" }),
+                        (0, p.jsx)("span", { children: tool.delivery_time || "5 - 15 Minutes Instant Delivery" })
+                      ]
+                    })
+                  ]
+                })
+              ]
+            }),
+
+            // RIGHT COLUMN: Sticky Purchase Card with Action Buttons (lg:col-span-3)
+            (0, p.jsxs)("div", {
+              className: "lg:col-span-3 w-full bg-slate-50/50 rounded-2xl p-5 border border-slate-200/60 space-y-3 sticky top-24 shadow-xs",
+              children: [
+                (0, p.jsx)("button", {
+                  onClick: e => {
+                    e.preventDefault();
+                    if (!inCart) {
+                      addItem({
+                        toolId: tool.id,
+                        toolName: tool.name,
+                        planName: "Standard",
+                        iconUrl: tool.icon_url || ""
+                      });
+                      toast.success(`${tool.name} added to cart`);
+                    }
+                  },
+                  disabled: inCart,
+                  className: `w-full h-12 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    inCart
+                      ? "bg-slate-200 text-slate-600 cursor-not-allowed opacity-80"
+                      : "bg-red-600 hover:bg-red-700 text-white shadow-sm shadow-red-600/20 active:scale-[0.99]"
+                  }`,
+                  children: inCart ? "In Cart 🛒" : "Add to Cart 🛒"
+                }),
+
+                (0, p.jsx)("a", {
+                  href: `https://wa.me/923106126454?text=Hi%20Techno%20Tools!%20I%20want%20to%20order%20${encodeURIComponent(tool.name)}%20for%20${encodeURIComponent(tool.price || "PKR 1,499")}`,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  className: "w-full h-12 rounded-xl text-sm font-bold border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs",
+                  children: "💬 Chat with Support"
+                })
+              ]
             })
-          }),
 
-          // Tool Details Column
-          (0, p.jsxs)("div", {
-            className: "w-full flex-1 space-y-4 text-center md:text-left",
-            children: [
-
-              // Badges Row
-              (0, p.jsxs)("div", {
-                className: "flex flex-wrap items-center justify-center md:justify-start gap-2",
-                children: [
-                  (0, p.jsx)("span", {
-                    className: "px-3 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20",
-                    children: tool.category
-                  }),
-                  tool.is_trending && (0, p.jsx)("span", {
-                    className: "px-3 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20",
-                    children: "🔥 Hot / Trending"
-                  }),
-                  (0, p.jsx)("span", {
-                    className: "px-3 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20",
-                    children: "⚡ Verified Instant"
-                  })
-                ]
-              }),
-
-              // Title
-              (0, p.jsx)("h1", {
-                className: "font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground",
-                children: tool.name
-              }),
-
-              // Price & Discount Row (Perfect Alignment — No Ugly Line Breaks)
-              (0, p.jsxs)("div", {
-                className: "flex flex-wrap items-center justify-center md:justify-start gap-3 py-1",
-                children: [
-                  (0, p.jsx)("span", {
-                    className: "font-display text-2xl sm:text-3xl font-extrabold text-primary",
-                    children: tool.price || "PKR 1,499"
-                  }),
-                  tool.original_price && (0, p.jsx)("span", {
-                    className: "text-sm sm:text-base text-muted-foreground line-through font-medium",
-                    children: tool.original_price
-                  }),
-                  tool.savings && (0, p.jsx)("span", {
-                    className: "px-2.5 py-1 rounded-md text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 whitespace-nowrap",
-                    children: tool.savings
-                  })
-                ]
-              }),
-
-              // Description
-              (0, p.jsx)("p", {
-                className: "text-xs sm:text-sm text-muted-foreground leading-relaxed",
-                children: tool.description
-              }),
-
-              // Action Buttons Container (Full-width & Aligned on Mobile)
-              (0, p.jsxs)("div", {
-                className: "pt-3 border-t border-border/60 space-y-3",
-                children: [
-                  (0, p.jsxs)("div", {
-                    className: "flex flex-col sm:flex-row items-center gap-3 w-full",
-                    children: [
-                      (0, p.jsx)("button", {
-                        onClick: e => {
-                          e.preventDefault();
-                          if (!inCart) {
-                            addItem({
-                              toolId: tool.id,
-                              toolName: tool.name,
-                              planName: "Standard",
-                              iconUrl: tool.icon_url || ""
-                            });
-                            toast.success(`${tool.name} added to cart`);
-                          }
-                        },
-                        disabled: inCart,
-                        className: `w-full sm:flex-1 h-12 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                          inCart
-                            ? "bg-secondary text-secondary-foreground pointer-events-none opacity-80"
-                            : "bg-primary text-primary-foreground shadow-glow hover:bg-primary/90"
-                        }`,
-                        children: inCart ? "Already in Cart 🛒" : "Add to Cart 🛒"
-                      }),
-                      (0, p.jsx)("a", {
-                        href: `https://wa.me/923106126454?text=Hi%20Techno%20Tools!%20I%20want%20to%20order%20${encodeURIComponent(tool.name)}%20for%20${encodeURIComponent(tool.price || "PKR 1,499")}`,
-                        target: "_blank",
-                        rel: "noopener noreferrer",
-                        className: "w-full sm:flex-1 h-12 rounded-xl text-sm font-semibold bg-emerald-600 text-white flex items-center justify-center gap-2 hover:bg-emerald-700 shadow-md transition-all cursor-pointer",
-                        children: "Buy on WhatsApp 💬"
-                      })
-                    ]
-                  }),
-
-                  // Guarantee Badges
-                  (0, p.jsxs)("div", {
-                    className: "flex flex-wrap items-center justify-between text-xs text-muted-foreground pt-1 gap-2",
-                    children: [
-                      (0, p.jsxs)("span", {
-                        className: "flex items-center gap-1 font-medium text-emerald-600",
-                        children: ["🛡️ ", tool.warranty_text || "30-Day Replacement Guarantee"]
-                      }),
-                      (0, p.jsxs)("span", {
-                        className: "flex items-center gap-1 font-medium",
-                        children: ["⚡ ", tool.delivery_time || "5-15 Mins Delivery"]
-                      })
-                    ]
-                  })
-                ]
-              })
-            ]
-          })
-        ]
+          ]
+        })
       }),
 
-      // Step 2 — Delivery Time & Order Flow Banner
+      // SECTION 2: DELIVERY TIME & ORDER PROCESS BANNER (Exact match to reference image)
       (0, p.jsxs)("div", {
-        className: "bg-gradient-to-r from-primary/10 via-accent/20 to-primary/10 border border-primary/20 rounded-3xl p-5 sm:p-8 space-y-4",
+        className: "bg-rose-50/40 border border-rose-100/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs",
         children: [
           (0, p.jsxs)("div", {
             className: "flex items-center gap-3",
             children: [
               (0, p.jsx)("div", {
-                className: "h-10 w-10 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg shadow-md shrink-0",
+                className: "w-10 h-10 rounded-2xl bg-red-600 text-white flex items-center justify-center font-bold text-lg shadow-sm shrink-0",
                 children: "⚡"
               }),
               (0, p.jsxs)("div", {
                 children: [
-                  (0, p.jsx)("h3", { className: "font-display text-base sm:text-lg font-bold text-foreground", children: "Delivery Time & Order Process" }),
-                  (0, p.jsx)("p", { className: "text-xs text-muted-foreground", children: tool.delivery_time || "5 - 15 Minutes Instant Delivery via WhatsApp & Email" })
+                  (0, p.jsx)("h3", { className: "text-lg font-bold text-slate-900", children: "Delivery Time & Order Process" }),
+                  (0, p.jsx)("p", { className: "text-xs text-slate-500 font-medium", children: tool.delivery_time || "5 - 15 Minutes Instant Delivery" })
                 ]
               })
             ]
           }),
+
+          // 3 Process Cards Row
           (0, p.jsxs)("div", {
-            className: "grid gap-3 sm:grid-cols-3 pt-2 text-xs",
+            className: "grid grid-cols-1 md:grid-cols-3 gap-4 items-center",
             children: [
+              // Card 1
               (0, p.jsxs)("div", {
-                className: "bg-card/80 p-4 rounded-2xl border border-border/60 space-y-1 shadow-xs",
+                className: "bg-white border border-slate-200/70 p-5 rounded-2xl space-y-2 relative shadow-xs",
                 children: [
-                  (0, p.jsx)("div", { className: "font-bold text-primary", children: "1. Select & Checkout" }),
-                  (0, p.jsx)("p", { className: "text-muted-foreground leading-relaxed", children: "Add tool to cart or click Buy on WhatsApp to initiate your request." })
+                  (0, p.jsx)("div", { className: "w-7 h-7 rounded-full bg-rose-100 text-red-600 font-bold text-xs flex items-center justify-center", children: "1" }),
+                  (0, p.jsx)("h4", { className: "text-sm font-bold text-red-600", children: "Select & Checkout" }),
+                  (0, p.jsx)("p", { className: "text-xs text-slate-500 leading-relaxed", children: "Add tool to cart or click Buy on WhatsApp to initiate your request." })
                 ]
               }),
+
+              // Card 2
               (0, p.jsxs)("div", {
-                className: "bg-card/80 p-4 rounded-2xl border border-border/60 space-y-1 shadow-xs",
+                className: "bg-white border border-slate-200/70 p-5 rounded-2xl space-y-2 relative shadow-xs",
                 children: [
-                  (0, p.jsx)("div", { className: "font-bold text-primary", children: "2. Payment Verification" }),
-                  (0, p.jsx)("p", { className: "text-muted-foreground leading-relaxed", children: "Upload payment screenshot on Dashboard or send directly on WhatsApp." })
+                  (0, p.jsx)("div", { className: "w-7 h-7 rounded-full bg-rose-100 text-red-600 font-bold text-xs flex items-center justify-center", children: "2" }),
+                  (0, p.jsx)("h4", { className: "text-sm font-bold text-red-600", children: "Payment Verification" }),
+                  (0, p.jsx)("p", { className: "text-xs text-slate-500 leading-relaxed", children: "Upload payment screenshot on Dashboard or send directly on WhatsApp." })
                 ]
               }),
+
+              // Card 3
               (0, p.jsxs)("div", {
-                className: "bg-card/80 p-4 rounded-2xl border border-border/60 space-y-1 shadow-xs",
+                className: "bg-white border border-slate-200/70 p-5 rounded-2xl space-y-2 relative shadow-xs",
                 children: [
-                  (0, p.jsx)("div", { className: "font-bold text-primary", children: "3. Instant Access & Guarantee" }),
-                  (0, p.jsx)("p", { className: "text-muted-foreground leading-relaxed", children: "Logins / invite links are sent within 5-15 mins with 24/7 warranty support." })
+                  (0, p.jsx)("div", { className: "w-7 h-7 rounded-full bg-rose-100 text-red-600 font-bold text-xs flex items-center justify-center", children: "3" }),
+                  (0, p.jsx)("h4", { className: "text-sm font-bold text-red-600", children: "Instant Access & Guarantee" }),
+                  (0, p.jsx)("p", { className: "text-xs text-slate-500 leading-relaxed", children: "Logins / invite links are sent within 5-15 mins with 24/7 warranty support." })
                 ]
               })
             ]
@@ -570,59 +618,65 @@ function ToolDetailsComponent() {
         ]
       }),
 
-      // Step 2 — Features Grid
+      // SECTION 3: FEATURES & FAQS GRID (Side-by-side on desktop, stacked on mobile)
       (0, p.jsxs)("div", {
-        className: "bg-card border border-border/60 rounded-3xl p-5 sm:p-8 space-y-5 shadow-card",
+        className: "grid grid-cols-1 lg:grid-cols-2 gap-6",
         children: [
-          (0, p.jsxs)("div", {
-            className: "space-y-1",
-            children: [
-              (0, p.jsx)("h3", { className: "font-display text-xl sm:text-2xl font-bold text-foreground", children: `Features of ${tool.name}` }),
-              (0, p.jsx)("p", { className: "text-xs text-muted-foreground", children: "Everything included in this premium tool subscription" })
-            ]
-          }),
-          (0, p.jsx)("div", {
-            className: "grid gap-3 sm:grid-cols-2",
-            children: (tool.features || []).map((feat, idx) => (
-              (0, p.jsxs)("div", {
-                key: idx,
-                className: "flex items-start gap-3 p-3.5 sm:p-4 rounded-2xl bg-muted/30 border border-border/40 text-xs sm:text-sm font-medium text-foreground",
-                children: [
-                  (0, p.jsx)("span", { className: "text-emerald-500 font-bold text-sm sm:text-base shrink-0", children: "✓" }),
-                  (0, p.jsx)("span", { children: feat })
-                ]
-              })
-            ))
-          })
-        ]
-      }),
 
-      // Step 2 — FAQs Section
-      (0, p.jsxs)("div", {
-        className: "bg-card border border-border/60 rounded-3xl p-5 sm:p-8 space-y-5 shadow-card",
-        children: [
+          // LEFT CARD: Features of ChatGPT Plus
           (0, p.jsxs)("div", {
-            className: "space-y-1",
+            className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs",
             children: [
-              (0, p.jsx)("h3", { className: "font-display text-xl sm:text-2xl font-bold text-foreground", children: `Frequently Asked Questions (FAQs)` }),
-              (0, p.jsx)("p", { className: "text-xs text-muted-foreground", children: `Common questions about ${tool.name}` })
+              (0, p.jsx)("h3", {
+                className: "text-lg sm:text-xl font-bold text-slate-900",
+                children: `Features of ${tool.name}`
+              }),
+              (0, p.jsx)("div", {
+                className: "grid grid-cols-1 sm:grid-cols-2 gap-3",
+                children: (tool.features || []).map((feat, idx) => (
+                  (0, p.jsxs)("div", {
+                    key: idx,
+                    className: "flex items-center gap-2.5 p-3.5 rounded-2xl bg-rose-50/50 border border-rose-100/80 text-xs sm:text-sm font-medium text-slate-800",
+                    children: [
+                      (0, p.jsx)("span", { className: "w-5 h-5 rounded-full bg-rose-100 text-red-600 flex items-center justify-center text-xs shrink-0 font-bold", children: "🎯" }),
+                      (0, p.jsx)("span", { children: feat })
+                    ]
+                  })
+                ))
+              })
             ]
           }),
-          (0, p.jsx)("div", {
-            className: "space-y-3",
-            children: (tool.faqs || []).map((faq, idx) => (
-              (0, p.jsxs)("div", {
-                key: idx,
-                className: "p-4 sm:p-5 rounded-2xl bg-muted/20 border border-border/50 space-y-1.5",
-                children: [
-                  (0, p.jsxs)("h4", { className: "font-display text-xs sm:text-sm font-semibold text-foreground flex items-center gap-2", children: ["❓ ", faq.q] }),
-                  (0, p.jsx)("p", { className: "text-xs sm:text-sm text-muted-foreground leading-relaxed pl-6", children: faq.a })
-                ]
+
+          // RIGHT CARD: Frequently Asked Questions (FAQs)
+          (0, p.jsxs)("div", {
+            className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs",
+            children: [
+              (0, p.jsx)("h3", {
+                className: "text-lg sm:text-xl font-bold text-slate-900",
+                children: "Frequently Asked Questions (FAQs)"
+              }),
+              (0, p.jsx)("div", {
+                className: "space-y-3",
+                children: (tool.faqs || []).map((faq, idx) => (
+                  (0, p.jsxs)("div", {
+                    key: idx,
+                    className: "p-4 sm:p-5 rounded-2xl bg-slate-50/50 border border-slate-200/60 space-y-1.5",
+                    children: [
+                      (0, p.jsxs)("h4", { className: "text-xs sm:text-sm font-semibold text-slate-900 flex items-center justify-between gap-2", children: [
+                        (0, p.jsxs)("span", { className: "flex items-center gap-2", children: ["❓ ", faq.q] }),
+                        (0, p.jsx)("span", { className: "text-slate-400 font-bold text-xs shrink-0", children: "v" })
+                      ] }),
+                      (0, p.jsx)("p", { className: "text-xs text-slate-500 leading-relaxed pl-6", children: faq.a })
+                    ]
+                  })
+                ))
               })
-            ))
+            ]
           })
+
         ]
       })
+
     ]
   });
 }
