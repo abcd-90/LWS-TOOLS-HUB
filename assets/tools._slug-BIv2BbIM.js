@@ -571,18 +571,18 @@ function ToolDetailsComponent() {
               children: [
                 // Badges Row with Explicit Inline Flex & Spacing (Guaranteed No Overlap!)
                 (0, p.jsxs)("div", {
-                  style: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', marginBottom: '12px' },
+                  style: { display: 'flex', flexWrap: 'nowrap', alignItems: 'center', gap: '8px', marginBottom: '12px' },
                   children: [
                     (0, p.jsx)("span", {
-                      style: { backgroundColor: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', padding: '4px 14px', borderRadius: '9999px', fontSize: '12px', fontWeight: '600' },
+                      style: { backgroundColor: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', padding: '4px 10px', borderRadius: '9999px', fontSize: '11px', fontWeight: '600', whiteSpace: 'nowrap' },
                       children: tool.category || "Design"
                     }),
                     tool.is_trending && (0, p.jsxs)("span", {
-                      style: { backgroundColor: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', padding: '4px 14px', borderRadius: '9999px', fontSize: '12px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '6px' },
+                      style: { backgroundColor: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', padding: '4px 10px', borderRadius: '9999px', fontSize: '11px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' },
                       children: ["🔥 ", "Hot / Trending"]
                     }),
                     (0, p.jsxs)("span", {
-                      style: { backgroundColor: '#fff1f2', color: '#ef4444', border: '1px solid #fecdd3', padding: '4px 14px', borderRadius: '9999px', fontSize: '12px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '6px' },
+                      style: { backgroundColor: '#fff1f2', color: '#ef4444', border: '1px solid #fecdd3', padding: '4px 10px', borderRadius: '9999px', fontSize: '11px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' },
                       children: ["⚡ ", "Verified Instant"]
                     })
                   ]
