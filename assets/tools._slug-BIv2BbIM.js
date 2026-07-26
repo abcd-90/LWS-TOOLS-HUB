@@ -766,8 +766,8 @@ function ToolDetailsComponent() {
 
                 // CTA Section (Equal Width Primary Solid Red & Secondary Clean White Buttons)
                 (0, p.jsxs)("div", {
-                  className: "flex flex-col sm:flex-row items-center gap-3.5 pt-2",
-                  style: { display: 'flex', width: '100%', gap: '14px' },
+                  className: "cta-buttons-container flex items-stretch pt-4",
+                  style: { display: 'flex', flexDirection: 'column', width: '100%', gap: '12px' },
                   children: [
                     (0, p.jsxs)("button", {
                       onClick: e => {
@@ -783,8 +783,8 @@ function ToolDetailsComponent() {
                         }
                       },
                       disabled: inCart,
-                      style: { backgroundColor: '#ef4444', color: '#ffffff', flex: '1', width: '100%' },
-                      className: `h-14 rounded-2xl text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-md shadow-red-500/20 active:scale-[0.99] hover:opacity-95`,
+                      style: { backgroundColor: '#ef4444', color: '#ffffff', width: '100%', minHeight: '52px', height: '52px' },
+                      className: `rounded-2xl text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-md shadow-red-500/20 active:scale-[0.99] hover:opacity-95`,
                       children: [
                         (0, p.jsx)("svg", {
                           xmlns: "http://www.w3.org/2000/svg",
@@ -803,8 +803,8 @@ function ToolDetailsComponent() {
                       href: `https://wa.me/923106126454?text=Hi%20Techno%20Tools!%20I%20want%20to%20order%20${encodeURIComponent(tool.name)}%20for%20${encodeURIComponent(tool.price || "PKR 1,499")}`,
                       target: "_blank",
                       rel: "noopener noreferrer",
-                      style: { flex: '1', width: '100%' },
-                      className: "h-14 rounded-2xl text-base font-bold border-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-2xs active:scale-[0.99]",
+                      style: { width: '100%', minHeight: '52px', height: '52px' },
+                      className: "rounded-2xl text-base font-bold border-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-2xs active:scale-[0.99]",
                       children: [
                         (0, p.jsx)("svg", {
                           xmlns: "http://www.w3.org/2000/svg",
@@ -829,10 +829,11 @@ function ToolDetailsComponent() {
 
       // 2. DELIVERY TIME & ORDER PROCESS BANNER (3 CONNECTED CARDS SIDE BY SIDE WITH RIGHT ARROWS ON DESKTOP)
       (0, p.jsxs)("div", {
-        className: "bg-rose-50/40 border border-rose-100/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs",
+        className: "bg-rose-50/40 border border-rose-100/80 rounded-3xl p-5 sm:p-8 shadow-xs",
         children: [
           (0, p.jsxs)("div", {
             className: "flex items-center gap-3",
+            style: { marginBottom: '20px' },
             children: [
               (0, p.jsx)("div", {
                 className: "w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200/60 text-amber-500 flex items-center justify-center font-bold text-xl shadow-2xs shrink-0",
@@ -841,7 +842,7 @@ function ToolDetailsComponent() {
               (0, p.jsxs)("div", {
                 children: [
                   (0, p.jsx)("h3", { className: "text-lg sm:text-xl font-extrabold text-slate-900", children: "Delivery Time & Order Process" }),
-                  (0, p.jsx)("p", { className: "text-xs text-slate-500 font-medium", children: tool.delivery_time || "5 - 15 Minutes Instant Delivery" })
+                  (0, p.jsx)("p", { className: "text-xs text-slate-500 font-medium", style: { marginTop: '2px' }, children: tool.delivery_time || "5 - 15 Minutes Instant Delivery" })
                 ]
               })
             ]
@@ -1002,10 +1003,11 @@ function ToolDetailsComponent() {
 
           // LEFT COLUMN: Features of Tool (2-Column Pill Grid on Desktop, 1-Column on Mobile)
           (0, p.jsxs)("div", {
-            className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs flex flex-col justify-between h-full",
+            className: "bg-white border border-slate-200/80 rounded-3xl p-5 sm:p-8 shadow-xs flex flex-col h-full",
             children: [
               (0, p.jsxs)("div", {
                 className: "flex items-center gap-2.5",
+                style: { marginBottom: '16px' },
                 children: [
                   (0, p.jsx)("span", { className: "text-red-500 text-lg font-bold", children: "✨" }),
                   (0, p.jsx)("h3", {
@@ -1038,10 +1040,11 @@ function ToolDetailsComponent() {
 
           // RIGHT COLUMN: Frequently Asked Questions (Interactive Accordion)
           (0, p.jsxs)("div", {
-            className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs flex flex-col justify-between h-full",
+            className: "bg-white border border-slate-200/80 rounded-3xl p-5 sm:p-8 shadow-xs flex flex-col h-full",
             children: [
               (0, p.jsxs)("div", {
                 className: "flex items-center gap-2.5",
+                style: { marginBottom: '16px' },
                 children: [
                   (0, p.jsx)("span", { className: "text-red-500 text-lg font-bold", children: "❓" }),
                   (0, p.jsx)("h3", {

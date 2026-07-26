@@ -27,11 +27,12 @@
 @media (max-width: 639px) {
   .hero-info-cards-container {
     grid-template-columns: 1fr !important;
-    gap: 8px !important;
+    gap: 10px !important;
   }
   .features-grid-container {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
   }
 }
 
@@ -41,6 +42,7 @@
     gap: 10px !important;
   }
   .features-grid-container {
+    display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
   }
@@ -50,11 +52,22 @@
   .delivery-step-arrow {
     display: none !important;
   }
+  .cta-buttons-container {
+    flex-direction: column !important;
+  }
 }
 
 @media (min-width: 768px) {
   .delivery-step-arrow {
     display: flex !important;
   }
+  .cta-buttons-container {
+    flex-direction: row !important;
+  }
+  .cta-buttons-container > * {
+    flex: 1 !important;
+  }
 }
+
+
 
