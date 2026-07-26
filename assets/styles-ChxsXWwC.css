@@ -22,3 +22,39 @@
   .lg\:block { display: block; }
   .lg\:flex { display: flex; }
 }
+
+/* Mobile Responsive Product Details Enhancements */
+@media (max-width: 639px) {
+  .hero-info-cards-container {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .features-grid-container {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+}
+
+@media (min-width: 640px) {
+  .hero-info-cards-container {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+  }
+  .features-grid-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .delivery-step-arrow {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .delivery-step-arrow {
+    display: flex !important;
+  }
+}
+

@@ -619,20 +619,10 @@ function ToolDetailsComponent() {
                   children: tool.description
                 }),
 
-                // 3 INFO CARDS IN 1 HORIZONTAL ROW WITH ICON BOXES & TEXT ALIGNMENT
+                // 3 INFO CARDS RESPONSIVE GRID (1 Column on Mobile, 3 Columns on Desktop)
                 (0, p.jsxs)("div", {
-                  style: { 
-                    backgroundColor: '#fff5f5', 
-                    border: '1px solid #fecdd3', 
-                    borderRadius: '16px', 
-                    padding: '12px', 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(3, 1fr)', 
-                    gap: '10px', 
-                    width: '100%', 
-                    boxSizing: 'border-box',
-                    margin: '16px 0'
-                  },
+                  className: "hero-info-cards-container bg-rose-50/50 border border-rose-100/80 rounded-2xl p-3 sm:p-3.5 my-4 w-full",
+                  style: { display: 'grid', width: '100%', boxSizing: 'border-box', margin: '16px 0' },
                   children: [
                     // Card 1: Validity
                     (0, p.jsxs)("div", {
@@ -671,10 +661,10 @@ function ToolDetailsComponent() {
                           })
                         }),
                         (0, p.jsxs)("div", {
-                          style: { display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' },
+                          style: { display: 'flex', flexDirection: 'column', minWidth: 0 },
                           children: [
-                            (0, p.jsx)("span", { style: { fontWeight: '700', color: '#0f172a', fontSize: '13px', leadingHeight: '1.2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }, children: "4 months" }),
-                            (0, p.jsx)("span", { style: { fontWeight: '500', color: '#64748b', fontSize: '11px', leadingHeight: '1.2', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }, children: "Validity" })
+                            (0, p.jsx)("span", { style: { fontWeight: '700', color: '#0f172a', fontSize: '13px', lineHeight: '1.2' }, children: "4 months" }),
+                            (0, p.jsx)("span", { style: { fontWeight: '500', color: '#64748b', fontSize: '11px', lineHeight: '1.2', marginTop: '2px' }, children: "Validity" })
                           ]
                         })
                       ]
@@ -717,10 +707,10 @@ function ToolDetailsComponent() {
                           })
                         }),
                         (0, p.jsxs)("div", {
-                          style: { display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' },
+                          style: { display: 'flex', flexDirection: 'column', minWidth: 0 },
                           children: [
-                            (0, p.jsx)("span", { style: { fontWeight: '700', color: '#0f172a', fontSize: '13px', leadingHeight: '1.2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }, children: "5 - 15 Minutes" }),
-                            (0, p.jsx)("span", { style: { fontWeight: '500', color: '#64748b', fontSize: '11px', leadingHeight: '1.2', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }, children: "Instant Delivery" })
+                            (0, p.jsx)("span", { style: { fontWeight: '700', color: '#0f172a', fontSize: '13px', lineHeight: '1.2' }, children: "5 - 15 Minutes" }),
+                            (0, p.jsx)("span", { style: { fontWeight: '500', color: '#64748b', fontSize: '11px', lineHeight: '1.2', marginTop: '2px' }, children: "Instant Delivery" })
                           ]
                         })
                       ]
@@ -763,10 +753,10 @@ function ToolDetailsComponent() {
                           })
                         }),
                         (0, p.jsxs)("div", {
-                          style: { display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' },
+                          style: { display: 'flex', flexDirection: 'column', minWidth: 0 },
                           children: [
-                            (0, p.jsx)("span", { style: { fontWeight: '700', color: '#0f172a', fontSize: '13px', leadingHeight: '1.2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }, children: "100% Safe" }),
-                            (0, p.jsx)("span", { style: { fontWeight: '500', color: '#64748b', fontSize: '11px', leadingHeight: '1.2', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }, children: "Secure & Trusted" })
+                            (0, p.jsx)("span", { style: { fontWeight: '700', color: '#0f172a', fontSize: '13px', lineHeight: '1.2' }, children: "100% Safe" }),
+                            (0, p.jsx)("span", { style: { fontWeight: '500', color: '#64748b', fontSize: '11px', lineHeight: '1.2', marginTop: '2px' }, children: "Secure & Trusted" })
                           ]
                         })
                       ]
@@ -837,7 +827,7 @@ function ToolDetailsComponent() {
         })
       }),
 
-      // 2. DELIVERY TIME & ORDER PROCESS BANNER (3 CONNECTED CARDS SIDE BY SIDE WITH RIGHT ARROWS)
+      // 2. DELIVERY TIME & ORDER PROCESS BANNER (3 CONNECTED CARDS SIDE BY SIDE WITH RIGHT ARROWS ON DESKTOP)
       (0, p.jsxs)("div", {
         className: "bg-rose-50/40 border border-rose-100/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs",
         children: [
@@ -899,10 +889,9 @@ function ToolDetailsComponent() {
                 ]
               }),
 
-              // RIGHT ARROW 1 -> 2
+              // RIGHT ARROW 1 -> 2 (ONLY VISIBLE ON DESKTOP!)
               (0, p.jsx)("div", {
-                className: "hidden md:flex shrink-0 items-center justify-center px-0.5 text-slate-300",
-                style: { display: 'flex', alignItems: 'center', justify: 'center' },
+                className: "delivery-step-arrow shrink-0 items-center justify-center px-0.5 text-slate-300",
                 children: (0, p.jsx)("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
                   fill: "none",
@@ -951,10 +940,9 @@ function ToolDetailsComponent() {
                 ]
               }),
 
-              // RIGHT ARROW 2 -> 3
+              // RIGHT ARROW 2 -> 3 (ONLY VISIBLE ON DESKTOP!)
               (0, p.jsx)("div", {
-                className: "hidden md:flex shrink-0 items-center justify-center px-0.5 text-slate-300",
-                style: { display: 'flex', alignItems: 'center', justify: 'center' },
+                className: "delivery-step-arrow shrink-0 items-center justify-center px-0.5 text-slate-300",
                 children: (0, p.jsx)("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
                   fill: "none",
@@ -1007,13 +995,12 @@ function ToolDetailsComponent() {
         ]
       }),
 
-      // 3. FEATURES & INTERACTIVE FAQS SECTION (2 EQUAL COLUMNS ON DESKTOP)
+      // 3. FEATURES & INTERACTIVE FAQS SECTION (2 EQUAL COLUMNS ON DESKTOP, 1 COLUMN ON MOBILE)
       (0, p.jsxs)("div", {
         className: "grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch",
-        style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', width: '100%' },
         children: [
 
-          // LEFT COLUMN: Features of Tool (2-Column Pill Grid)
+          // LEFT COLUMN: Features of Tool (2-Column Pill Grid on Desktop, 1-Column on Mobile)
           (0, p.jsxs)("div", {
             className: "bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs flex flex-col justify-between h-full",
             children: [
@@ -1028,8 +1015,8 @@ function ToolDetailsComponent() {
                 ]
               }),
               (0, p.jsx)("div", {
-                className: "w-full flex-1",
-                style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', width: '100%' },
+                className: "features-grid-container w-full flex-1",
+                style: { display: 'grid', width: '100%' },
                 children: (tool.features || []).map((feat, idx) => (
                   (0, p.jsxs)("div", {
                     key: idx,
