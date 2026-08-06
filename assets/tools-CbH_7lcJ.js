@@ -32,13 +32,16 @@ function m() {
             console.error(err);
           }
 
-          if (!list || list.length === 0) {
-            list = FEATURED_TOOLS_DATA.filter(item => {
-              const matchCat = m === `All` || item.category === m;
-              const matchTrend = !h || item.is_trending === true;
-              const matchQuery = !g || item.name.toLowerCase().includes(g.toLowerCase()) || item.description.toLowerCase().includes(g.toLowerCase());
-              return matchCat && matchTrend && matchQuery;
-            });
+          // Always merge FEATURED_TOOLS_DATA so newly added local items (like Gemini 18M) always display
+          for (const feat of FEATURED_TOOLS_DATA) {
+            const matchCat = m === `All` || feat.category === m;
+            const matchTrend = !h || feat.is_trending === true;
+            const matchQuery = !g || feat.name.toLowerCase().includes(g.toLowerCase()) || feat.description.toLowerCase().includes(g.toLowerCase());
+            if (matchCat && matchTrend && matchQuery) {
+              if (!list.some(item => item.slug === feat.slug || item.id === feat.id)) {
+                list.unshift(feat);
+              }
+            }
           }
 
           return list;
