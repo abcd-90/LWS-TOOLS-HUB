@@ -18,13 +18,13 @@ export const FEATURED_TOOLS_DATA = [
     delivery_time: "5 - 15 Minutes Instant Delivery",
     warranty_text: "18 Months Validity • Full Replacement Guarantee",
     description: "18 Months Gemini AI Pro subscription + 5TB Google Cloud Storage. Full Family Account activated on your own Gmail. Works worldwide, 100% private and secure.",
-    icon_url: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+    icon_url: "/assets/gemini-ai-pro.png",
     canva_link: "https://gemini.google.com",
     is_active: true,
     is_trending: true,
     gallery_images: [
-      "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80"
+      "/assets/gemini-ai-pro.png",
+      "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg"
     ],
     features: [
       "⚡ 18 Months Gemini AI Pro Access",
@@ -58,9 +58,7 @@ export const FEATURED_TOOLS_DATA = [
     is_trending: true,
     gallery_images: [
       "https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg"
     ],
     features: [
       "Generative Fill & Neural Filters",
@@ -93,10 +91,7 @@ export const FEATURED_TOOLS_DATA = [
     is_active: true,
     is_trending: true,
     gallery_images: [
-      "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
     ],
     features: [
       "Access to GPT-4o & GPT-4 Turbo models",
@@ -129,10 +124,7 @@ export const FEATURED_TOOLS_DATA = [
     is_active: true,
     is_trending: true,
     gallery_images: [
-      "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"
     ],
     features: [
       "100+ Million Premium Stock Photos, Videos & Audio",
@@ -164,10 +156,7 @@ export const FEATURED_TOOLS_DATA = [
     is_active: true,
     is_trending: true,
     gallery_images: [
-      "https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png"
     ],
     features: [
       "30 Hours of Fast GPU Generation Time",
@@ -198,10 +187,7 @@ export const FEATURED_TOOLS_DATA = [
     is_active: true,
     is_trending: true,
     gallery_images: [
-      "https://cdn.worldvectorlogo.com/logos/semrush-1.svg",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://cdn.worldvectorlogo.com/logos/semrush-1.svg"
     ],
     features: [
       "Keyword Magic Tool & Difficulty Analysis",
@@ -227,15 +213,12 @@ export const FEATURED_TOOLS_DATA = [
     delivery_time: "5 - 15 Minutes",
     warranty_text: "30-Day Replacement Guarantee",
     description: "Dedicated 4K UHD screen with personal PIN lock, unlimited movies & TV series in HDR with multi-device login.",
-    icon_url: "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico",
+    icon_url: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
     canva_link: "https://netflix.com",
     is_active: true,
     is_trending: true,
     gallery_images: [
-      "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
     ],
     features: [
       "4K Ultra HD + HDR Streaming Quality",
@@ -261,15 +244,12 @@ export const FEATURED_TOOLS_DATA = [
     delivery_time: "5 - 15 Minutes",
     warranty_text: "30-Day Replacement Guarantee",
     description: "AI video editing, auto-captions in 20+ languages, 4K 60fps export, premium visual effects & cloud project sync.",
-    icon_url: "https://sf16-va.tiktokcdn.com/obj/eden-va2/ais_lseh7eh7b/capcut_logo.png",
+    icon_url: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Capcut-icon.svg",
     canva_link: "https://capcut.com",
     is_active: true,
     is_trending: false,
     gallery_images: [
-      "https://sf16-va.tiktokcdn.com/obj/eden-va2/ais_lseh7eh7b/capcut_logo.png",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/b/b3/Capcut-icon.svg"
     ],
     features: [
       "AI Auto-Subtitles & Speech-to-Text",
@@ -299,10 +279,7 @@ export const FEATURED_TOOLS_DATA = [
     is_active: true,
     is_trending: false,
     gallery_images: [
-      "https://upload.wikimedia.org/wikipedia/commons/e/e2/Grammarly_icon.svg",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/e/e2/Grammarly_icon.svg"
     ],
     features: [
       "Advanced Clarity & Full-Sentence Rewrites",
@@ -332,10 +309,7 @@ export const FEATURED_TOOLS_DATA = [
     is_active: true,
     is_trending: true,
     gallery_images: [
-      "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg"
     ],
     features: [
       "Access to Claude 3.5 Sonnet & Claude 3 Opus",
@@ -365,10 +339,7 @@ export const FEATURED_TOOLS_DATA = [
     is_active: true,
     is_trending: false,
     gallery_images: [
-      "https://upload.wikimedia.org/wikipedia/commons/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg"
     ],
     features: [
       "20+ Desktop & Mobile Creative Apps",
@@ -398,10 +369,7 @@ export const FEATURED_TOOLS_DATA = [
     is_active: true,
     is_trending: false,
     gallery_images: [
-      "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
+      "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
     ],
     features: [
       "Ad-free Music & Podcast Streaming",
@@ -518,13 +486,10 @@ function ToolDetailsComponent() {
   const fallbackIcon = `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(tool.name)}&backgroundType=gradientLinear&backgroundColor=1e9bff,7ee8fa`;
   const mainIcon = tool.icon_url || fallbackIcon;
 
-  const defaultGallery = [
-    mainIcon,
-    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-    "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
-    "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&q=80"
-  ];
-  const gallery = (tool.gallery_images && tool.gallery_images.length > 0) ? tool.gallery_images : defaultGallery;
+  const defaultGallery = [mainIcon];
+  const rawGallery = (tool.gallery_images && tool.gallery_images.length > 0) ? tool.gallery_images : defaultGallery;
+  const gallery = rawGallery.filter(img => img && !img.includes("unsplash"));
+  if (gallery.length === 0) gallery.push(mainIcon);
   const activeImg = gallery[selectedImg] || mainIcon;
 
   return (0, p.jsxs)("div", {
