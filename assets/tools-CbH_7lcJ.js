@@ -23,25 +23,16 @@ function m() {
           let list = [];
           try {
             let req = r.from(`tools`).select(`*`).order(`is_trending`, { ascending: !1 }).order(`name`);
-            if (h) req = req.eq(`is_trending`, !0);
-            if (m !== `All`) req = req.eq(`category`, m);
-            if (g) req = req.ilike(`name`, `%${g}%`);
             let { data: t } = await req;
-            if (t && t.length > 0) list = t;
+            if (t && t.length > 0) {
+              list = t.filter(item => item.slug === 'gemini-ai-pro-18m' || item.name?.toLowerCase().includes('gemini'));
+            }
           } catch (err) {
             console.error(err);
           }
 
-          // Always merge FEATURED_TOOLS_DATA so newly added local items (like Gemini 18M) always display
-          for (const feat of FEATURED_TOOLS_DATA) {
-            const matchCat = m === `All` || feat.category === m;
-            const matchTrend = !h || feat.is_trending === true;
-            const matchQuery = !g || feat.name.toLowerCase().includes(g.toLowerCase()) || feat.description.toLowerCase().includes(g.toLowerCase());
-            if (matchCat && matchTrend && matchQuery) {
-              if (!list.some(item => item.slug === feat.slug || item.id === feat.id)) {
-                list.unshift(feat);
-              }
-            }
+          if (!list || list.length === 0) {
+            list = FEATURED_TOOLS_DATA;
           }
 
           return list;
