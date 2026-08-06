@@ -18,12 +18,11 @@ export const FEATURED_TOOLS_DATA = [
     delivery_time: "5 - 15 Minutes Instant Delivery",
     warranty_text: "18 Months Validity • Full Replacement Guarantee",
     description: "18 Months Gemini AI Pro subscription + 5TB Google Cloud Storage. Full Family Account activated on your own Gmail. Works worldwide, 100% private and secure.",
-    icon_url: "/assets/gemini-ai-pro.png",
+    icon_url: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
     canva_link: "https://gemini.google.com",
     is_active: true,
     is_trending: true,
     gallery_images: [
-      "/assets/gemini-ai-pro.png",
       "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg"
     ],
     features: [

@@ -975,7 +975,7 @@
         original_price: 'PKR 100,000',
         warranty_text: '18 Months Validity • Full Replacement Guarantee',
         description: '18 Months Gemini AI Pro subscription + 5TB Google Cloud Storage. Full Family Account activated on your own Gmail. Works worldwide, 100% private and secure.',
-        icon_url: '/assets/gemini-ai-pro.png',
+        icon_url: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg',
         canva_link: 'https://gemini.google.com',
         is_active: true,
         is_trending: true
@@ -983,8 +983,8 @@
     ];
 
     async function seedTenProducts() {
-      if (!confirm('Populate 10 featured products (ChatGPT, Canva, Midjourney, Semrush, Netflix, CapCut, Grammarly, Claude, Adobe, Spotify) with features, logos & warranty into database?')) return;
-      showToast('Seeding 10 products...', 'info');
+      if (!confirm('Populate Gemini AI Pro 18 Months product into database?')) return;
+      showToast('Seeding Gemini AI Pro product...', 'info');
       try {
         for (const item of SAMPLE_PRODUCTS) {
           const { data: existing } = await dbClient.from('tools').select('id').eq('slug', item.slug).maybeSingle();
@@ -994,13 +994,13 @@
             await dbClient.from('tools').insert(item);
           }
         }
-        showToast('10 products seeded successfully with features & logos!', 'success');
+        showToast('Gemini AI Pro seeded successfully!', 'success');
         loadProducts();
       } catch (err) {
         console.error(err);
         productsList = SAMPLE_PRODUCTS.map((p, idx) => ({ ...p, id: 'sample-' + idx }));
         renderProducts(productsList);
-        showToast('10 products loaded into table for testing workflow!', 'success');
+        showToast('Gemini product loaded into table!', 'success');
       }
     }
 
@@ -1023,12 +1023,15 @@
 
       try {
         const { data, error } = await dbClient.from('tools').select('*').order('created_at', { ascending: false });
-        if (error) throw error;
-        
-        if (!data || data.length === 0) {
-          productsList = SAMPLE_PRODUCTS.map((p, idx) => ({ ...p, id: 'sample-' + idx }));
+        if (!error && data && data.length > 0) {
+          const geminiOnly = data.filter(p => p.slug === 'gemini-ai-pro-18m' || p.name?.toLowerCase().includes('gemini'));
+          if (geminiOnly.length > 0) {
+            productsList = geminiOnly;
+          } else {
+            productsList = SAMPLE_PRODUCTS.map((p, idx) => ({ ...p, id: 'sample-' + idx }));
+          }
         } else {
-          productsList = data;
+          productsList = SAMPLE_PRODUCTS.map((p, idx) => ({ ...p, id: 'sample-' + idx }));
         }
         renderProducts(productsList);
       } catch (err) {
