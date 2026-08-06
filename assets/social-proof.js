@@ -67,12 +67,12 @@
       }
     });
 
-    // Replace "Hi, friend" or user greetings with Dashboard link
-    document.querySelectorAll('header span, nav span, header div, nav div').forEach(el => {
+    // Target ONLY leaf <span> elements for "Hi, friend" (Never touch container divs or logos!)
+    document.querySelectorAll('header span, nav span').forEach(el => {
       if (!userLoggedIn) return;
-      if (el.children.length > 0 && !el.querySelector('span')) return;
+      if (el.children.length > 0) return; // Ignore any element containing sub-tags!
       const t = el.textContent ? el.textContent.trim() : '';
-      if ((t.includes('Hi, friend') || t === 'Hi, friend!' || t === 'Hi, friend' || (t.startsWith('Hi,') && !t.includes('Dashboard'))) && !el.dataset.lwsDashFixed) {
+      if ((t === 'Hi, friend!' || t === 'Hi, friend' || (t.startsWith('Hi,') && !t.includes('Dashboard'))) && !el.dataset.lwsDashFixed) {
         el.dataset.lwsDashFixed = '1';
         el.innerHTML = `<a href="${dashPath}" style="color:#f43f5e;font-weight:700;text-decoration:none;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(244,63,94,0.08);border-radius:6px;">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
