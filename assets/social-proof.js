@@ -57,7 +57,6 @@
       if (userLoggedIn) {
         link.dataset.lwsReplaced = '1';
         link.href = dashPath;
-        // Unhide so that Dashboard button shows on mobile header as well as desktop!
         link.classList.remove('hidden');
         link.style.display = 'inline-flex';
         link.innerHTML = `
@@ -68,17 +67,39 @@
       }
     });
 
-    // Handle "Hi, friend" or user name spans
-    document.querySelectorAll('nav span').forEach(el => {
-      if (el.dataset.lwsDash || el.children.length > 0) return;
-      const t = el.textContent.trim();
-      if (t === 'Hi, friend!' || t === 'Hi, friend') {
-        el.dataset.lwsDash = '1';
-        el.innerHTML = `<a href="${dashPath}" style="color:#f43f5e;font-weight:700;text-decoration:none;font-family:Inter,sans-serif;">Dashboard</a>`;
+    // Instant replace "Hi, friend" or greetings with Dashboard link
+    document.querySelectorAll('header span, nav span, header div, nav div').forEach(el => {
+      if (!userLoggedIn) return;
+      if (el.children.length > 0 && !el.querySelector('span')) return;
+      const t = el.textContent ? el.textContent.trim() : '';
+      if ((t.includes('Hi, friend') || t === 'Hi, friend!' || t === 'Hi, friend' || (t.startsWith('Hi,') && !t.includes('Dashboard'))) && !el.dataset.lwsDashFixed) {
+        el.dataset.lwsDashFixed = '1';
+        el.innerHTML = `<a href="${dashPath}" style="color:#f43f5e;font-weight:700;text-decoration:none;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(244,63,94,0.08);border-radius:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+          Dashboard
+        </a>`;
       }
     });
 
     setupMobileDrawer();
+  }
+
+  // Initial & Auto Observer Polling to catch React hydration & route changes
+  updateNav();
+  setInterval(updateNav, 350);
+
+  if (typeof window !== 'undefined') {
+    const startObserver = () => {
+      if (document.body) {
+        const obs = new MutationObserver(updateNav);
+        obs.observe(document.body, { childList: true, subtree: true });
+      }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startObserver);
+    } else {
+      startObserver();
+    }
   }
 
   // ── 3. MOBILE DRAWER MENU & HAMBURGER CLICK LISTENER ────────────────────
