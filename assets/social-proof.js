@@ -54,7 +54,7 @@
     const signInLinks = document.querySelectorAll('nav a[href*="auth"], header a[href*="auth"]');
 
     signInLinks.forEach(link => {
-      if (userLoggedIn) {
+      if (userLoggedIn && !link.dataset.lwsReplaced) {
         link.dataset.lwsReplaced = '1';
         link.href = dashPath;
         link.classList.remove('hidden');
@@ -67,7 +67,7 @@
       }
     });
 
-    // Instant replace "Hi, friend" or greetings with Dashboard link
+    // Replace "Hi, friend" or user greetings with Dashboard link
     document.querySelectorAll('header span, nav span, header div, nav div').forEach(el => {
       if (!userLoggedIn) return;
       if (el.children.length > 0 && !el.querySelector('span')) return;
@@ -80,27 +80,15 @@
         </a>`;
       }
     });
-
-    setupMobileDrawer();
   }
 
-  // Initial & Auto Observer Polling to catch React hydration & route changes
+  // Safe timed triggers without high CPU loops
   updateNav();
-  setInterval(updateNav, 350);
-
-  if (typeof window !== 'undefined') {
-    const startObserver = () => {
-      if (document.body) {
-        const obs = new MutationObserver(updateNav);
-        obs.observe(document.body, { childList: true, subtree: true });
-      }
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', startObserver);
-    } else {
-      startObserver();
-    }
+  [300, 800, 1500, 3000].forEach(ms => setTimeout(updateNav, ms));
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateNav);
   }
+  window.addEventListener('load', updateNav);
 
   // ── 3. MOBILE DRAWER MENU & HAMBURGER CLICK LISTENER ────────────────────
   function setupMobileDrawer() {
