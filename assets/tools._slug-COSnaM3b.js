@@ -8,6 +8,40 @@ var React = i(r(), 1);
 
 export const FEATURED_TOOLS_DATA = [
   {
+    id: "tool-gemini-pro-18m",
+    name: "Gemini AI Pro — 18 Months",
+    slug: "gemini-ai-pro-18m",
+    category: "AI",
+    price: "PKR 599",
+    original_price: "PKR 100,000",
+    savings: "Save 99%",
+    delivery_time: "5 - 15 Minutes Instant Delivery",
+    warranty_text: "18 Months Validity • Full Replacement Guarantee",
+    description: "18 Months Gemini AI Pro subscription + 5TB Google Cloud Storage. Full Family Account activated on your own Gmail. Works worldwide, 100% private and secure.",
+    icon_url: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+    canva_link: "https://gemini.google.com",
+    is_active: true,
+    is_trending: true,
+    gallery_images: [
+      "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80"
+    ],
+    features: [
+      "⚡ 18 Months Gemini AI Pro Access",
+      "☁️ 5TB Google Cloud Storage",
+      "👨‍👩‍👧‍👦 Full Family Account (Not An Invite)",
+      "🔒 Activated On Your Own Gmail",
+      "🌍 Works Worldwide",
+      "💯 Private & Secure"
+    ],
+    faqs: [
+      { q: "How is Gemini Pro activated?", a: "It is activated directly on your own Gmail address securely within 5 to 15 minutes." },
+      { q: "What is the warranty period?", a: "You get full 18-month warranty support for the entire duration of the subscription." },
+      { q: "Is this a shared account or invite?", a: "No, this is a Full Family Account activated on your personal Gmail." },
+      { q: "Does it include cloud storage?", a: "Yes, it includes 5TB Google Cloud Storage!" }
+    ]
+  },
+  {
     id: "tool-photoshop",
     name: "Adobe Photoshop",
     slug: "adobe-photoshop",
