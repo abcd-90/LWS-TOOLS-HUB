@@ -827,12 +827,14 @@
           .eq('user_id', loggedInUser.id)
           .order('created_at', { ascending: false });
 
-        if (error) throw error;
-
-        updateDashboardWidgets(orders || []);
+        if (!error && orders) {
+          updateDashboardWidgets(orders);
+        } else {
+          updateDashboardWidgets([]);
+        }
       } catch (err) {
-        console.error(err);
-        showToast('Error retrieving order details.', 'error');
+        console.warn('Orders query fallback:', err);
+        updateDashboardWidgets([]);
       }
     }
 
