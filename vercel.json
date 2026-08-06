@@ -1,17 +1,19 @@
 {
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/tools", "destination": "/tools/index.html" },
-    { "source": "/tools/(.*)", "destination": "/tools/index.html" },
-    { "source": "/contact", "destination": "/contact/index.html" },
-    { "source": "/contact/(.*)", "destination": "/contact/index.html" },
-    { "source": "/cart", "destination": "/cart/index.html" },
-    { "source": "/cart/(.*)", "destination": "/cart/index.html" },
-    { "source": "/auth", "destination": "/auth/index.html" },
-    { "source": "/auth/(.*)", "destination": "/auth/index.html" },
-    { "source": "/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/dashboard/(.*)", "destination": "/dashboard/index.html" },
-    { "source": "/lws-control-726", "destination": "/lws-control-726/index.html" },
-    { "source": "/lws-control-726/(.*)", "destination": "/lws-control-726/index.html" }
+  "routes": [
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/tools/(.*)", "dest": "/tools/index.html" },
+    { "src": "/tools", "dest": "/tools/index.html" },
+    { "src": "/contact/(.*)", "dest": "/contact/index.html" },
+    { "src": "/contact", "dest": "/contact/index.html" },
+    { "src": "/cart/(.*)", "dest": "/cart/index.html" },
+    { "src": "/cart", "dest": "/cart/index.html" },
+    { "src": "/auth/(.*)", "dest": "/auth/index.html" },
+    { "src": "/auth", "dest": "/auth/index.html" },
+    { "src": "/dashboard/(.*)", "dest": "/dashboard/index.html" },
+    { "src": "/dashboard", "dest": "/dashboard/index.html" },
+    { "src": "/lws-control-726/(.*)", "dest": "/lws-control-726/index.html" },
+    { "src": "/lws-control-726", "dest": "/lws-control-726/index.html" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
