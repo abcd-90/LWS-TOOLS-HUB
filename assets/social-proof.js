@@ -51,44 +51,54 @@
   // ── 2. SAFE NAV UPDATE (Header Dashboard Button for Mobile & Desktop) ──────
   function updateNav() {
     const userLoggedIn = isLoggedIn();
-    const signInLinks = document.querySelectorAll('nav a[href*="auth"], header a[href*="auth"]');
+    if (!userLoggedIn) return;
 
+    // A. Replace any Sign In links with Dashboard button
+    const signInLinks = document.querySelectorAll('nav a[href*="auth"], header a[href*="auth"]');
     signInLinks.forEach(link => {
-      if (userLoggedIn && !link.dataset.lwsReplaced) {
-        link.dataset.lwsReplaced = '1';
+      if (!link.innerHTML.includes('Dashboard')) {
         link.href = dashPath;
         link.classList.remove('hidden');
         link.style.display = 'inline-flex';
+        link.style.alignItems = 'center';
         link.innerHTML = `
-          <button style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #f43f5e, #e11d48);color:white;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 2px 10px rgba(244,63,94,0.3);">
+          <button style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #f43f5e, #e11d48);color:white;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 2px 10px rgba(244,63,94,0.3);transition:all 0.2s ease;">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
             Dashboard
           </button>`;
       }
     });
 
-    // Target ONLY leaf <span> elements for "Hi, friend" (Never touch container divs or logos!)
-    document.querySelectorAll('header span, nav span').forEach(el => {
-      if (!userLoggedIn) return;
-      if (el.children.length > 0) return; // Ignore any element containing sub-tags!
+    // B. Target leaf elements rendering "Hi, friend!" or "Hi, ..."
+    document.querySelectorAll('header span, nav span, header div, nav div').forEach(el => {
+      if (el.children.length > 2) return; // Do not touch container elements
       const t = el.textContent ? el.textContent.trim() : '';
-      if ((t === 'Hi, friend!' || t === 'Hi, friend' || (t.startsWith('Hi,') && !t.includes('Dashboard'))) && !el.dataset.lwsDashFixed) {
-        el.dataset.lwsDashFixed = '1';
-        el.innerHTML = `<a href="${dashPath}" style="color:#f43f5e;font-weight:700;text-decoration:none;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(244,63,94,0.08);border-radius:6px;">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-          Dashboard
-        </a>`;
+      if (t === 'Hi, friend!' || t === 'Hi, friend' || (t.startsWith('Hi,') && !t.includes('Dashboard'))) {
+        if (!el.innerHTML.includes('Dashboard')) {
+          el.innerHTML = `
+            <span style="font-size:12px;font-weight:600;color:#4b5563;margin-right:6px;display:inline-flex;align-items:center;gap:4px;">Hi, friend!</span>
+            <a href="${dashPath}" style="color:white;background:linear-gradient(135deg, #f43f5e, #e11d48);font-weight:700;text-decoration:none;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:12px;box-shadow:0 2px 10px rgba(244,63,94,0.3);transition:all 0.2s ease;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+              Dashboard
+            </a>`;
+        }
       }
     });
   }
 
-  // Safe timed triggers without high CPU loops
+  // Continuous triggers & MutationObserver for instant React state updates
   updateNav();
-  [300, 800, 1500, 3000].forEach(ms => setTimeout(updateNav, ms));
+  setInterval(updateNav, 400);
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', updateNav);
   }
   window.addEventListener('load', updateNav);
+  window.addEventListener('storage', updateNav);
+
+  if (typeof MutationObserver !== 'undefined' && document.body) {
+    const observer = new MutationObserver(() => { updateNav(); });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
 
   // ── 3. MOBILE DRAWER MENU & HAMBURGER CLICK LISTENER ────────────────────
   function setupMobileDrawer() {
