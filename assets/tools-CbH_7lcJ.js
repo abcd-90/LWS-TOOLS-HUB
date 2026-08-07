@@ -42,14 +42,18 @@ function m() {
   let [currentPath, setCurrentPath] = React.useState(typeof window !== `undefined` ? window.location.pathname : ``);
 
   React.useEffect(() => {
-    let handleLocation = () => { setCurrentPath(window.location.pathname); };
+    let handleLocation = () => {
+      if (typeof window !== `undefined` && window.location.pathname !== currentPath) {
+        setCurrentPath(window.location.pathname);
+      }
+    };
     window.addEventListener(`popstate`, handleLocation);
-    let t = setInterval(handleLocation, 100);
+    let t = setInterval(handleLocation, 500);
     return () => {
       window.removeEventListener(`popstate`, handleLocation);
       clearInterval(t);
     };
-  }, []);
+  }, [currentPath]);
 
   let isDetailRoute = currentPath.startsWith(`/tools/`) && currentPath.slice(7).length > 0 && !currentPath.slice(7).includes(`index.html`);
   if (isDetailRoute) return (0, p.jsx)(ToolDetails, {});
