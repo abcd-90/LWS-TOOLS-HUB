@@ -107,8 +107,8 @@ function m() {
       (0, p.jsx)(`div`, {
         className: `mt-10`,
         children: v ? (0, p.jsx)(`div`, {
-          className: `flex flex-wrap gap-6 justify-start items-stretch`,
-          children: [...Array(8)].map((e, t) => (0, p.jsx)(`div`, { className: `h-56 w-full sm:w-[320px] animate-pulse rounded-2xl bg-muted` }, t))
+          className: `flex flex-wrap gap-5 justify-start items-stretch`,
+          children: [...Array(8)].map((e, t) => (0, p.jsx)(`div`, { className: `h-56 w-[270px] max-w-full flex-shrink-0 animate-pulse rounded-2xl bg-muted` }, t))
         }) : _.length === 0 ? (0, p.jsxs)(`div`, {
           className: `py-16 text-center`,
           children: [
@@ -117,8 +117,8 @@ function m() {
             (0, p.jsx)(`p`, { className: `mt-1 text-muted-foreground`, children: `Try clearing filters or a different search.` })
           ]
         }) : (0, p.jsx)(`div`, {
-          className: `flex flex-wrap gap-6 justify-start items-stretch`,
-          children: _.map((e, t) => (0, p.jsx)(`div`, { className: `w-full sm:w-[320px] max-w-full`, children: (0, p.jsx)(u, { tool: e, index: t }) }, e.id))
+          className: `flex flex-wrap gap-5 justify-start items-stretch`,
+          children: _.map((e, t) => (0, p.jsx)(`div`, { className: `w-[270px] max-w-full flex-shrink-0`, children: (0, p.jsx)(u, { tool: e, index: t }) }, e.id))
         })
       })
     ]

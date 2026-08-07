@@ -3,15 +3,27 @@
   'use strict';
 
   const SUPABASE_KEY = 'sb-fgojtnpkpgnmqfngegmq-auth-token';
-  const path = window.location.pathname;
-
-  function getSession() {
+  const path = window.location.pathname;  function getSession() {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('auth') || key.includes('token') || key.includes('supabase') || key.startsWith('sb-'))) {
+          const item = localStorage.getItem(key);
+          if (item) {
+            const parsed = JSON.parse(item);
+            if (parsed && (parsed.user || parsed.currentSession || parsed.access_token || parsed.session)) {
+              return parsed;
+            }
+          }
+        }
+      }
+    } catch (e) {}
     try { return JSON.parse(localStorage.getItem(SUPABASE_KEY)); } catch { return null; }
   }
 
   function isLoggedIn() {
     const s = getSession();
-    return !!(s && s.user);
+    return !!(s && (s.user || s.currentSession || s.access_token || s.session));
   }
 
   function getUser() {
@@ -37,6 +49,7 @@
 
   window.lwsLogout = function () {
     try { localStorage.removeItem(SUPABASE_KEY); } catch (e) {}
+    try { localStorage.clear(); } catch (e) {}
     window.location.href = homePath;
   };
 
@@ -54,7 +67,6 @@
   function updateNav() {
     if (isUpdatingNav) return;
     const userLoggedIn = isLoggedIn();
-    if (!userLoggedIn) return;
 
     isUpdatingNav = true;
 
@@ -68,7 +80,7 @@
       }
 
       // 2. Convert Sign In or "Hi, friend!" elements in header/nav to Dashboard button
-      if (!document.querySelector('header a[href*="dashboard"], nav a[href*="dashboard"]')) {
+      if (userLoggedIn && !document.querySelector('header a[href*="dashboard"], nav a[href*="dashboard"]')) {
         const firstSignIn = document.querySelector('header a[href*="auth"], nav a[href*="auth"]');
         if (firstSignIn) {
           firstSignIn.href = dashPath;
@@ -162,11 +174,13 @@
     }
 
     const navItems = [
+      { name: '🚀 Dashboard', path: dashPath, icon: '<svg style="width:20px;height:20px;color:#f43f5e;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"/></svg>' },
       { name: 'Home', path: homePath, icon: '<svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>' },
       { name: 'All Tools', path: toolsPath, icon: '<svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>' },
-      { name: 'Contact Us', path: contactPath, icon: '<svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>' },
+      { name: 'Contact Us', path: contactPath, icon: '<svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 02 2z"/></svg>' },
       { name: 'Trending Tools', path: toolsPath + '_trending_%22true%22', icon: '<svg style="width:20px;height:20px;color:#f43f5e;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>' },
       { name: 'Shopping Cart', path: cartPath, icon: '<svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>' }
+    ];93c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>' }
     ];
 
     if (userLoggedIn) {
