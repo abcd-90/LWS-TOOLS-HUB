@@ -48,7 +48,7 @@
     return; // STOP — don't touch React DOM on auth page
   }
 
-  // ── 2. SAFE NAV UPDATE (Header Dashboard Button for Mobile & Desktop) ──────
+  // ── 2. SAFE NAV UPDATE (Header & Mobile Drawer Dashboard Button) ──────────
   let isUpdatingNav = false;
 
   function updateNav() {
@@ -59,7 +59,7 @@
     isUpdatingNav = true;
 
     try {
-      // 1. Remove duplicate Dashboard buttons if more than 1 exists in header/nav
+      // 1. Remove duplicate Dashboard buttons in header
       const dashLinks = Array.from(document.querySelectorAll('header a[href*="dashboard"], nav a[href*="dashboard"]'));
       if (dashLinks.length > 1) {
         for (let i = 1; i < dashLinks.length; i++) {
@@ -67,40 +67,56 @@
         }
       }
 
-      // 2. If 1 Dashboard button is already present, we are done!
-      if (document.querySelector('header a[href*="dashboard"], nav a[href*="dashboard"]')) {
-        return;
-      }
-
-      // 3. Convert ONLY the FIRST Sign In link found in header/nav
-      const firstSignIn = document.querySelector('header a[href*="auth"], nav a[href*="auth"]');
-      if (firstSignIn) {
-        firstSignIn.href = dashPath;
-        firstSignIn.classList.remove('hidden');
-        firstSignIn.style.display = 'inline-flex';
-        firstSignIn.style.alignItems = 'center';
-        firstSignIn.innerHTML = `
-          <button style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #f43f5e, #e11d48);color:white;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 2px 10px rgba(244,63,94,0.3);transition:all 0.2s ease;">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-            Dashboard
-          </button>`;
-        return;
-      }
-
-      // 4. Otherwise, convert ONLY the FIRST leaf "Hi, friend!" span found
-      const spans = document.querySelectorAll('header span, nav span');
-      for (let el of spans) {
-        if (el.children.length > 0) continue;
-        const t = el.textContent ? el.textContent.trim() : '';
-        if (t === 'Hi, friend!' || t === 'Hi, friend' || (t.startsWith('Hi,') && !t.includes('Dashboard'))) {
-          el.innerHTML = `
-            <a href="${dashPath}" style="color:white;background:linear-gradient(135deg, #f43f5e, #e11d48);font-weight:700;text-decoration:none;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:12px;box-shadow:0 2px 10px rgba(244,63,94,0.3);transition:all 0.2s ease;">
+      // 2. Convert FIRST Sign In link found in header/nav to Dashboard button if not present
+      if (!document.querySelector('header a[href*="dashboard"], nav a[href*="dashboard"]')) {
+        const firstSignIn = document.querySelector('header a[href*="auth"], nav a[href*="auth"]');
+        if (firstSignIn) {
+          firstSignIn.href = dashPath;
+          firstSignIn.classList.remove('hidden');
+          firstSignIn.style.display = 'inline-flex';
+          firstSignIn.style.alignItems = 'center';
+          firstSignIn.innerHTML = `
+            <button style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #f43f5e, #e11d48);color:white;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 2px 10px rgba(244,63,94,0.3);transition:all 0.2s ease;">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
               Dashboard
-            </a>`;
-          break;
+            </button>`;
+        } else {
+          // Check leaf "Hi, friend!" spans
+          const spans = document.querySelectorAll('header span, nav span');
+          for (let el of spans) {
+            if (el.children.length > 0) continue;
+            const t = el.textContent ? el.textContent.trim() : '';
+            if (t === 'Hi, friend!' || t === 'Hi, friend' || (t.startsWith('Hi,') && !t.includes('Dashboard'))) {
+              el.innerHTML = `
+                <a href="${dashPath}" style="color:white;background:linear-gradient(135deg, #f43f5e, #e11d48);font-weight:700;text-decoration:none;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:12px;box-shadow:0 2px 10px rgba(244,63,94,0.3);transition:all 0.2s ease;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                  Dashboard
+                </a>`;
+              break;
+            }
+          }
         }
       }
+
+      // 3. Ensure Dashboard is inserted into React's mobile drawer menu (above Sign out if rendered)
+      const mobileSignOuts = document.querySelectorAll('button, a');
+      mobileSignOuts.forEach(btn => {
+        const text = (btn.textContent || '').trim().toLowerCase();
+        if ((text === 'sign out' || text === 'logout') && !btn.dataset.lwsDashAddedAbove) {
+          btn.dataset.lwsDashAddedAbove = '1';
+          const parent = btn.parentElement;
+          if (parent && !parent.querySelector('.lws-mobile-dash-link')) {
+            const dashLink = document.createElement('a');
+            dashLink.className = 'lws-mobile-dash-link';
+            dashLink.href = dashPath;
+            dashLink.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:6px;border-radius:10px;background:linear-gradient(135deg,#f43f5e,#e11d48);color:white;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 3px 10px rgba(244,63,94,0.3);';
+            dashLink.innerHTML = `
+              <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"/></svg>
+              Dashboard`;
+            parent.insertBefore(dashLink, btn);
+          }
+        }
+      });
     } finally {
       isUpdatingNav = false;
     }
@@ -135,6 +151,14 @@
       { name: 'Trending Tools', path: toolsPath + '_trending_%22true%22', icon: '<svg style="width:20px;height:20px;color:#f43f5e;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>' },
       { name: 'Shopping Cart', path: cartPath, icon: '<svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>' }
     ];
+
+    if (userLoggedIn) {
+      navItems.unshift({
+        name: '🚀 Dashboard',
+        path: dashPath,
+        icon: '<svg style="width:20px;height:20px;color:#f43f5e;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"/></svg>'
+      });
+    }
 
     let userSection = '';
     if (userLoggedIn) {
@@ -194,9 +218,15 @@
     `;
 
     // Attach click handlers to hamburger menu buttons
-    const allButtons = Array.from(document.querySelectorAll('button'));
+    const allButtons = Array.from(document.querySelectorAll('button, [role="button"]'));
     allButtons.forEach(btn => {
-      const isMenuBtn = btn.querySelector('.lucide-menu') || btn.classList.contains('lucide-menu') || (btn.innerHTML && btn.innerHTML.includes('lucide-menu'));
+      const isMenuBtn = 
+        btn.querySelector('.lucide-menu') || 
+        btn.classList.contains('lucide-menu') || 
+        (btn.innerHTML && (btn.innerHTML.includes('lucide-menu') || btn.innerHTML.includes('M4 6h16') || btn.innerHTML.includes('M4 12h16') || btn.innerHTML.includes('M3 12h18'))) ||
+        (btn.getAttribute('aria-label') && btn.getAttribute('aria-label').toLowerCase().includes('menu')) ||
+        (btn.className && typeof btn.className === 'string' && btn.className.includes('md:hidden') && btn.querySelector('svg'));
+
       if (isMenuBtn && !btn.dataset.lwsDrawerAttached) {
         btn.dataset.lwsDrawerAttached = '1';
         btn.addEventListener('click', (e) => {
