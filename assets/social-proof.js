@@ -238,6 +238,34 @@
     });
   }
 
+  // Global capture click listener for 3-line hamburger menu icon on mobile
+  document.addEventListener('click', function (e) {
+    let target = e.target;
+    while (target && target !== document.body) {
+      if (target.tagName === 'BUTTON' || target.getAttribute('role') === 'button' || (target.className && typeof target.className === 'string' && target.className.includes('menu'))) {
+        const html = target.innerHTML || '';
+        const aria = (target.getAttribute('aria-label') || '').toLowerCase();
+        const cls = typeof target.className === 'string' ? target.className : '';
+        const isMenuBtn = 
+          html.includes('lucide-menu') || 
+          html.includes('M4 6h16') || 
+          html.includes('M4 12h16') || 
+          html.includes('M3 12h18') || 
+          aria.includes('menu') || 
+          aria.includes('toggle') || 
+          (cls.includes('md:hidden') && target.querySelector('svg'));
+
+        if (isMenuBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.openLwsDrawer();
+          return;
+        }
+      }
+      target = target.parentElement;
+    }
+  }, true);
+
   window.openLwsDrawer = function() {
     setupMobileDrawer();
     const drawer = document.getElementById('lws-mobile-drawer');
@@ -248,6 +276,8 @@
   window.closeLwsDrawer = function() {
     const drawer = document.getElementById('lws-mobile-drawer');
     if (drawer) drawer.classList.remove('open');
+    document.body.style.overflow = '';
+  };
     document.body.style.overflow = '';
   };
 
