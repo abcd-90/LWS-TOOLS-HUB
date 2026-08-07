@@ -108,7 +108,7 @@ function m() {
         className: `mt-10`,
         children: v ? (0, p.jsx)(`div`, {
           className: `flex flex-wrap gap-5 justify-start items-stretch`,
-          children: [...Array(8)].map((e, t) => (0, p.jsx)(`div`, { className: `h-56 w-[270px] max-w-full flex-shrink-0 animate-pulse rounded-2xl bg-muted` }, t))
+          children: [...Array(8)].map((e, t) => (0, p.jsx)(`div`, { style: { width: `270px`, maxWidth: `100%`, flexShrink: 0 }, className: `h-56 animate-pulse rounded-2xl bg-muted` }, t))
         }) : _.length === 0 ? (0, p.jsxs)(`div`, {
           className: `py-16 text-center`,
           children: [
@@ -118,7 +118,7 @@ function m() {
           ]
         }) : (0, p.jsx)(`div`, {
           className: `flex flex-wrap gap-5 justify-start items-stretch`,
-          children: _.map((e, t) => (0, p.jsx)(`div`, { className: `w-[270px] max-w-full flex-shrink-0`, children: (0, p.jsx)(u, { tool: e, index: t }) }, e.id))
+          children: _.map((e, t) => (0, p.jsx)(`div`, { style: { width: `270px`, maxWidth: `100%`, flexShrink: 0 }, children: (0, p.jsx)(u, { tool: e, index: t }) }, e.id))
         })
       })
     ]
