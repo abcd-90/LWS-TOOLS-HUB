@@ -175,13 +175,8 @@
         <div style="padding:16px;background:#fff1f2;border-radius:16px;border:1px solid #ffe4e6;margin-top:16px;">
           <div style="font-size:11px;font-weight:700;color:#9f1239;text-transform:uppercase;letter-spacing:0.5px;">Account Signed In</div>
           <div style="font-size:13px;font-weight:600;color:#111827;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${email || 'Active Member'}</div>
-          
-          <a href="${dashPath}" onclick="window.closeLwsDrawer()" style="display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg, #f43f5e, #e11d48);color:white;text-decoration:none;font-weight:700;font-size:14px;padding:12px;border-radius:12px;margin-top:12px;box-shadow:0 4px 14px rgba(244,63,94,0.35);">
-            <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"/></svg>
-            Dashboard
-          </a>
 
-          <button onclick="window.lwsLogout()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:white;color:#e11d48;border:1px solid #fecdd3;font-weight:600;font-size:13px;padding:10px;border-radius:10px;margin-top:8px;cursor:pointer;">
+          <button onclick="window.lwsLogout()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:white;color:#e11d48;border:1px solid #fecdd3;font-weight:600;font-size:13px;padding:10px;border-radius:10px;margin-top:12px;cursor:pointer;">
             <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
             Sign Out
           </button>
