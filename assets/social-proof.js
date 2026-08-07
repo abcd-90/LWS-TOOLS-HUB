@@ -67,7 +67,7 @@
         }
       }
 
-      // 2. Convert FIRST Sign In link found in header/nav to Dashboard button if not present
+      // 2. Convert Sign In or "Hi, friend!" elements in header/nav to Dashboard button
       if (!document.querySelector('header a[href*="dashboard"], nav a[href*="dashboard"]')) {
         const firstSignIn = document.querySelector('header a[href*="auth"], nav a[href*="auth"]');
         if (firstSignIn) {
@@ -81,18 +81,35 @@
               Dashboard
             </button>`;
         } else {
-          // Check leaf "Hi, friend!" spans
-          const spans = document.querySelectorAll('header span, nav span');
-          for (let el of spans) {
+          // Check ALL leaf nodes in nav / header for "Hi, friend" or user greeting
+          let replaced = false;
+          const allNavNodes = document.querySelectorAll('nav *, header *, div *');
+          for (let el of allNavNodes) {
             if (el.children.length > 0) continue;
             const t = el.textContent ? el.textContent.trim() : '';
-            if (t === 'Hi, friend!' || t === 'Hi, friend' || (t.startsWith('Hi,') && !t.includes('Dashboard'))) {
-              el.innerHTML = `
-                <a href="${dashPath}" style="color:white;background:linear-gradient(135deg, #f43f5e, #e11d48);font-weight:700;text-decoration:none;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:12px;box-shadow:0 2px 10px rgba(244,63,94,0.3);transition:all 0.2s ease;">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-                  Dashboard
-                </a>`;
-              break;
+            if (t.includes('Hi, friend') || t.startsWith('Hi,') || t === 'Sign In') {
+              if (el.parentElement) {
+                el.parentElement.innerHTML = `
+                  <a href="${dashPath}" style="color:white;background:linear-gradient(135deg, #f43f5e, #e11d48);font-weight:700;text-decoration:none;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:12px;box-shadow:0 2px 10px rgba(244,63,94,0.3);transition:all 0.2s ease;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                    Dashboard
+                  </a>`;
+                replaced = true;
+                break;
+              }
+            }
+          }
+          // Fallback: If no Hi, friend element was found, insert next to Cart link
+          if (!replaced) {
+            const cartLink = document.querySelector('a[href*="cart"]');
+            if (cartLink && cartLink.parentElement) {
+              const dashBtn = document.createElement('a');
+              dashBtn.href = dashPath;
+              dashBtn.style.cssText = 'color:white;background:linear-gradient(135deg, #f43f5e, #e11d48);font-weight:700;text-decoration:none;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:12px;box-shadow:0 2px 10px rgba(244,63,94,0.3);margin-left:8px;';
+              dashBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                Dashboard`;
+              cartLink.parentElement.appendChild(dashBtn);
             }
           }
         }
