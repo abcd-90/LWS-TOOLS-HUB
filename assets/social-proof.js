@@ -39,13 +39,13 @@
     return prefix + file;
   }
 
-  const homePath = getRelativePath('index.html');
-  const toolsPath = getRelativePath('tools/index.html');
-  const contactPath = getRelativePath('contact/index.html');
-  const cartPath = getRelativePath('cart/index.html');
-  const dashPath = getRelativePath('dashboard/index.html');
-  const authPath = getRelativePath('auth/index.html');
-  const adminPath = getRelativePath('lws-control-726/index.html');
+  const homePath = getRelativePath('');
+  const toolsPath = getRelativePath('tools/');
+  const contactPath = getRelativePath('contact/');
+  const cartPath = getRelativePath('cart/');
+  const dashPath = getRelativePath('dashboard/');
+  const authPath = getRelativePath('auth/');
+  const adminPath = getRelativePath('lws-control-726/');
 
   window.lwsLogout = function () {
     try { localStorage.removeItem(SUPABASE_KEY); } catch (e) {}
