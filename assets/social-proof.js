@@ -65,7 +65,7 @@
   let isUpdatingNav = false;
 
   function updateNav() {
-    if (isUpdatingNav) return;
+    if (isUpdatingNav || path.includes('/dashboard')) return;
     const userLoggedIn = isLoggedIn();
 
     isUpdatingNav = true;
@@ -222,6 +222,7 @@
     `;
 
     // Attach click handlers to hamburger menu buttons
+    if (path.includes('/dashboard') || document.getElementById('mobile-sidebar')) return;
     const allButtons = Array.from(document.querySelectorAll('button, [role="button"]'));
     allButtons.forEach(btn => {
       const isMenuBtn = 
@@ -244,6 +245,9 @@
 
   // Global capture click listener for 3-line hamburger menu icon on mobile
   document.addEventListener('click', function (e) {
+    if (path.includes('/dashboard') || document.getElementById('mobile-sidebar')) {
+      return;
+    }
     let target = e.target;
     while (target && target !== document.body) {
       if (target.tagName === 'BUTTON' || target.getAttribute('role') === 'button' || (target.className && typeof target.className === 'string' && target.className.includes('menu'))) {
